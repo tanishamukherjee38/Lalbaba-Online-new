@@ -1,4 +1,4 @@
-package com.example.lalbaba_online
+package com.online.lalbaba
 
 import io.flutter.embedding.android.FlutterActivity
 
