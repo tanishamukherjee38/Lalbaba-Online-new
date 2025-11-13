@@ -29,7 +29,7 @@ class LalbabaApp extends StatelessWidget {
   }
 }
 
-/* ===================== Reusable Full-screen No Internet Modal ===================== */
+
 Future<void> showNoInternetModal({
   required BuildContext context,
   required VoidCallback onRetry,
@@ -109,8 +109,6 @@ Future<void> showNoInternetModal({
     },
   );
 }
-
-/* ===================== Splash Screen ===================== */
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -199,7 +197,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-/* ===================== Home (WebView) ===================== */
 class LalbabaHome extends StatefulWidget {
   const LalbabaHome({super.key});
 
