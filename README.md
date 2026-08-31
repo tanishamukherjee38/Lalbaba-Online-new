@@ -1,69 +1,54 @@
 # lalbaba_online
 
-A new Flutter project.
+WHERE SHOULD I PUT MY CODE?
 
-## Getting Started
+UI Screen
+→ features/<feature>/presentation/pages/
 
-This project is a starting point for a Flutter application.
+Feature UI Component
+→ features/<feature>/presentation/widgets/
 
-A few resources to get you started if this is your first Flutter project:
+Feature State Management
+→ features/<feature>/presentation/controllers/
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+API Model
+→ features/<feature>/data/models/
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+API Call Definition
+→ features/<feature>/data/datasources/
 
+Repository Implementation
+→ features/<feature>/data/repositories/
 
-<!-- ============================================ -->
+Business Entity
+→ features/<feature>/domain/entities/
 
-# Flutter Clean Architecture Structure
+Repository Contract
+→ features/<feature>/domain/repositories/
 
-This ZIP contains only the project structure for the `lib/` folder.
+Business Operation
+→ features/<feature>/domain/usecases/
 
-No real Flutter implementation code is included.
-Each Dart file contains only English `//` comments explaining:
-- why the file exists
-- what responsibility belongs there
-- what should not be placed there when relevant
+Common API Infrastructure
+→ core/network/
 
-## Architecture
+API Endpoint List
+→ core/constants/api_endpoints.dart
 
-lib/
-- app/       -> Application configuration, routing, theme, and app-level setup
-- core/      -> Shared reusable infrastructure and utilities
-- features/  -> Feature-based modules
-- main.dart  -> Application entry point
+Common UI
+→ core/widgets/
 
-## Feature Architecture
+Colors
+→ app/theme/app_colors.dart
 
-Each major feature can contain:
+Sizes
+→ app/theme/app_sizes.dart
 
-data/
-- models/
-- datasources/
-- repositories/
+Typography
+→ app/theme/app_text_styles.dart
 
-domain/
-- entities/
-- repositories/
-- usecases/
+Routes
+→ app/router/
 
-presentation/
-- pages/
-- widgets/
-
-## Riverpod Later
-
-Riverpod is intentionally NOT included in this structure.
-
-When you learn Riverpod later, you can add:
-
-presentation/providers/
-
-For example:
-
-features/product/presentation/providers/product_provider.dart
-
-This allows you to add Riverpod without rebuilding the entire architecture.
+Storage
+→ core/storage/
