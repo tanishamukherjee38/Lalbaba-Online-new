@@ -2,10 +2,10 @@
 // Why: Prevent hard-coded route strings from being repeated throughout the application.
 class RouteNames {
   RouteNames._();
-
+  static const web_splash = '/splashscreen';
   static const login = '/login';
 
-  static const home = '/home';
+  static const home = '/homepage';
 
   static const products = '/products';
 

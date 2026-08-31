@@ -4,6 +4,9 @@
 // Keep app-wide startup logic here, not feature-specific business logic.
 
 import 'package:flutter/material.dart';
+import 'package:lalbaba_online/app/router/app_router.dart';
+import 'package:lalbaba_online/app/router/route_names.dart';
+import 'package:lalbaba_online/features/home/presentation/pages/home_page.dart';
 import 'package:lalbaba_online/webView/lalbabaWebView.dart';
 
 void main() {
@@ -16,11 +19,15 @@ class LalbabaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'LALBABA ONLINE',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
-      home: const SplashScreen(),
+      // home:
+      routerConfig:appRouter
+      // RouteNames.login,
+      //LalBabaApp(),
+      //const SplashScreen(),
     );
   }
 }
