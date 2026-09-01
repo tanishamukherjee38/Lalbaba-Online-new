@@ -4,6 +4,7 @@
 // Keep app-wide startup logic here, not feature-specific business logic.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lalbaba_online/app/router/app_router.dart';
 import 'package:lalbaba_online/app/router/route_names.dart';
 import 'package:lalbaba_online/features/home/presentation/pages/home_page.dart';
@@ -11,7 +12,12 @@ import 'package:lalbaba_online/webView/lalbabaWebView.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const LalbabaApp());
+    runApp(
+    const ProviderScope(
+      child: LalbabaApp(),
+    ),
+  );
+
 }
 
 class LalbabaApp extends StatelessWidget {
