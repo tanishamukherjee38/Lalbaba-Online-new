@@ -37,6 +37,9 @@ dependencies:
   webview_flutter: ^4.10.0
   url_launcher: ^6.3.1
   go_router: 
+  connectivity_plus: ^7.3.1
+  upgrader: ^13.7.0
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:

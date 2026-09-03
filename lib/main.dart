@@ -6,18 +6,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lalbaba_online/app/router/app_router.dart';
-import 'package:lalbaba_online/app/router/route_names.dart';
-import 'package:lalbaba_online/features/home/presentation/pages/home_page.dart';
-import 'package:lalbaba_online/webView/lalbabaWebView.dart';
+
+import 'features/home/presentation/widgets/languange_constant.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-    runApp(
-    const ProviderScope(
-      child: LalbabaApp(),
-    ),
-  );
-
+  runApp(const ProviderScope(child: LalbabaApp()));
 }
 
 class LalbabaApp extends StatelessWidget {
@@ -30,7 +24,7 @@ class LalbabaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       // home:
-      routerConfig:appRouter
+      routerConfig: appRouter,
       // RouteNames.login,
       //LalBabaApp(),
       //const SplashScreen(),

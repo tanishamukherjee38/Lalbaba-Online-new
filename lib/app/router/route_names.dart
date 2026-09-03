@@ -3,13 +3,23 @@
 class RouteNames {
   RouteNames._();
   static const web_splash = '/splashscreen';
+  static const splash = '/splash';
+
+  static const noInternet = '/no-internet';
+
+  static const update = '/update';
+
   static const login = '/login';
 
+  static const bottomnavigation = '/bottomnavigation';
   static const home = '/homepage';
 
   static const products = '/products';
-
+  static const productList = '/products/list';
   static const productDetails = '/products/:id';
+
+  static const categories = '/categories';
+  static const cart = '/cart';
 
   static const orders = '/orders';
 
@@ -17,6 +27,4 @@ class RouteNames {
 
   static const profile = '/profile';
   static const account = '/account';
-  static const bottomnavigation = '/bottomnavigation';
-
 }

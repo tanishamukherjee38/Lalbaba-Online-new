@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../home/presentation/widgets/app_string.dart';
 
 class BottomNavWidget extends StatelessWidget {
   final int currentIndex;
@@ -29,10 +30,7 @@ class BottomNavWidget extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 6,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           child: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: onTap,
@@ -52,61 +50,33 @@ class BottomNavWidget extends StatelessWidget {
             showSelectedLabels: true,
             showUnselectedLabels: true,
 
-            selectedLabelStyle: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
 
-            unselectedLabelStyle: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
 
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home_outlined,
-                  size: 24,
-                ),
-                activeIcon: Icon(
-                  Icons.home,
-                  size: 24,
-                ),
-                label: 'Home',
+                icon: Icon(Icons.home_outlined, size: 24),
+                activeIcon: Icon(Icons.home, size: 24),
+                label: AppStrings.home,
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.window_sharp,
-                  size: 24,
-                ),
-                activeIcon: Icon(
-                  Icons.window_sharp,
-                  size: 24,
-                ),
-                label: 'Category',
+                icon: Icon(Icons.window_sharp, size: 24),
+                activeIcon: Icon(Icons.window_sharp, size: 24),
+                label: AppStrings.categories,
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 24,
-                ),
-                activeIcon: Icon(
-                  Icons.shopping_cart,
-                  size: 24,
-                ),
-                label: 'Cart',
+                icon: Icon(Icons.shopping_cart_outlined, size: 24),
+                activeIcon: Icon(Icons.shopping_cart, size: 24),
+                label: AppStrings.cart,
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.person_outline,
-                  size: 24,
-                ),
-                activeIcon: Icon(
-                  Icons.person,
-                  size: 24,
-                ),
-                label: 'Account',
+                icon: Icon(Icons.person_outline, size: 24),
+                activeIcon: Icon(Icons.person, size: 24),
+                label: AppStrings.account,
               ),
             ],
           ),

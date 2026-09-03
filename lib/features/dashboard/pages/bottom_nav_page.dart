@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lalbaba_online/features/home/presentation/widgets/appdrawer_widget.dart';
 
+import '../../cart/presentation/pages/cart_page.dart';
+import '../../categories/presentation/pages/categories_page.dart';
+import '../../home/presentation/widgets/account_widget.dart';
+import '../../home/presentation/widgets/languange_constant.dart';
 import '../controller/bottom_nav_controller.dart';
 import '../widgets/bottom_nav_widget.dart';
 
@@ -16,39 +19,34 @@ class NavigationPage extends ConsumerStatefulWidget {
   }
 }
 
-class _NavigationPageState
-    extends ConsumerState<NavigationPage> {
-
+class _NavigationPageState extends ConsumerState<NavigationPage> {
   @override
   Widget build(BuildContext context) {
+    // Language change listen করবে
+    return AnimatedBuilder(
+      animation: AppLanguageConstants.instance,
+      builder: (context, child) {
+        final selectedIndex = ref.watch(bottomNavProvider);
 
-    final selectedIndex = ref.watch(
-      bottomNavProvider,
-    );
+        return Scaffold(
+          body: selectedIndex == 0
+              ? const HomePage()
+              : selectedIndex == 1
+              ? const CategoriesPage()
+              : selectedIndex == 2
+              ? const CartPage()
+              : const AccountPage(),
 
-    return Scaffold(
-      body: selectedIndex==0
-          ? const HomePage()
-          : selectedIndex==1
-              ? Text('Selected Index: $selectedIndex')
-              : selectedIndex==2
-                  ? const HomePage()
-                  : const AccountPage(
-                      userName: 'John Doe',
-                      userEmail: 'john.doe@example.com',
-                    ),
+          //const HomePage(),
+          bottomNavigationBar: BottomNavWidget(
+            currentIndex: selectedIndex,
 
-      //const HomePage(),
-
-      bottomNavigationBar: BottomNavWidget(
-        currentIndex: selectedIndex,
-
-        onTap: (index) {
-          ref
-              .read(bottomNavProvider.notifier)
-              .changeIndex(index);
-        },
-      ),
+            onTap: (index) {
+              ref.read(bottomNavProvider.notifier).changeIndex(index);
+            },
+          ),
+        );
+      },
     );
   }
 }

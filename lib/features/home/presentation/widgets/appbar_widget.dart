@@ -87,7 +87,6 @@
 
 // import '../../../../app/theme/app_colors.dart';
 
-
 // class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
 //   final int cartCount;
 //   final VoidCallback? onCartTap;
@@ -288,14 +287,12 @@
 //   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 // }
 
-
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/asset_constants.dart';
 
-class LalBabaAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int cartCount;
   final int notificationCount;
 
@@ -323,31 +320,31 @@ class LalBabaAppBar extends StatelessWidget
       // ─────────────────────────────────────────────
       // MENU BUTTON
       // ─────────────────────────────────────────────
-      leading: Builder(
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: IconButton(
-              tooltip: 'Menu',
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              style: IconButton.styleFrom(
-                backgroundColor:
-                    AppColors.background.withOpacity(0.12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              icon: const Icon(
-                Icons.menu_rounded,
-                color: AppColors.background,
-                size: 24,
-              ),
-            ),
-          );
-        },
-      ),
+      // leading: Builder(
+      //   builder: (context) {
+      //     return Padding(
+      //       padding: const EdgeInsets.only(left: 10),
+      //       child: IconButton(
+      //         tooltip: 'Menu',
+      //         onPressed: () {
+      //           Scaffold.of(context).openDrawer();
+      //         },
+      //         style: IconButton.styleFrom(
+      //           backgroundColor:
+      //               AppColors.background.withOpacity(0.12),
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(12),
+      //           ),
+      //         ),
+      //         icon: const Icon(
+      //           Icons.menu_rounded,
+      //           color: AppColors.background,
+      //           size: 24,
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
 
       // ─────────────────────────────────────────────
       // LOGO + BRAND
@@ -375,11 +372,7 @@ class LalBabaAppBar extends StatelessWidget
               child: Image.asset(
                 AssetConstants.logo,
                 fit: BoxFit.contain,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
+                errorBuilder: (context, error, stackTrace) {
                   return const Icon(
                     Icons.rice_bowl_rounded,
                     color: AppColors.error,
@@ -428,12 +421,12 @@ class LalBabaAppBar extends StatelessWidget
         // Notification
         _buildNotificationButton(),
 
-        const SizedBox(width: 4),
+        const SizedBox(width: 15),
 
-        // Cart
-        _buildCartButton(),
+        // // Cart
+        // _buildCartButton(),
 
-        const SizedBox(width: 8),
+        // const SizedBox(width: 8),
       ],
     );
   }
@@ -449,55 +442,47 @@ class LalBabaAppBar extends StatelessWidget
           tooltip: 'Notifications',
           onPressed: onNotificationTap,
           style: IconButton.styleFrom(
-            backgroundColor:
-                AppColors.background.withOpacity(0.12),
+            backgroundColor: AppColors.background.withOpacity(0.12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          icon: const Icon(
-            Icons.notifications_none_rounded,
-            color: AppColors.background,
-            size: 24,
+          icon: Badge(
+            label: Text(notificationCount > 99 ? '99+' : '$notificationCount'),
+            child: const Icon(
+              Icons.notifications_none_rounded,
+              color: AppColors.background,
+              size: 28,
+            ),
           ),
         ),
 
         // Notification badge
-        if (notificationCount > 0)
-          Positioned(
-            right: -2,
-            top: -4,
-            child: Container(
-              constraints: const BoxConstraints(
-                minWidth: 19,
-                minHeight: 19,
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppColors.error,
-                  width: 2,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  notificationCount > 99
-                      ? '99+'
-                      : '$notificationCount',
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    height: 1,
-                  ),
-                ),
-              ),
-            ),
-          ),
+        // if (notificationCount > 0)
+        //   Positioned(
+        //     right: -2,
+        //     top: -4,
+        //     child: Container(
+        //       constraints: const BoxConstraints(minWidth: 19, minHeight: 19),
+        //       padding: const EdgeInsets.symmetric(horizontal: 4),
+        //       decoration: BoxDecoration(
+        //         color: AppColors.background,
+        //         shape: BoxShape.circle,
+        //         border: Border.all(color: AppColors.error, width: 2),
+        //       ),
+        //       child: Center(
+        //         child: Text(
+        //           notificationCount > 99 ? '99+' : '$notificationCount',
+        //           style: const TextStyle(
+        //             color: AppColors.error,
+        //             fontSize: 9,
+        //             fontWeight: FontWeight.w800,
+        //             height: 1,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
     );
   }
@@ -513,8 +498,7 @@ class LalBabaAppBar extends StatelessWidget
           tooltip: 'Cart',
           onPressed: onCartTap,
           style: IconButton.styleFrom(
-            backgroundColor:
-                AppColors.background.withOpacity(0.12),
+            backgroundColor: AppColors.background.withOpacity(0.12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -532,20 +516,12 @@ class LalBabaAppBar extends StatelessWidget
             right: -2,
             top: -4,
             child: Container(
-              constraints: const BoxConstraints(
-                minWidth: 19,
-                minHeight: 19,
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-              ),
+              constraints: const BoxConstraints(minWidth: 19, minHeight: 19),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 color: AppColors.background,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppColors.error,
-                  width: 2,
-                ),
+                border: Border.all(color: AppColors.error, width: 2),
               ),
               child: Center(
                 child: Text(
@@ -565,7 +541,5 @@ class LalBabaAppBar extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(
-        kToolbarHeight,
-      );
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
