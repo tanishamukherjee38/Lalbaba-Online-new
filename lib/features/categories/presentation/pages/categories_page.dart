@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/router/route_names.dart';
 import '../../../../core/widgets/app_app_bar.dart';
-import '../../../home/presentation/widgets/app_string.dart';
+import '../../../account/presentation/widgets/app_string.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
@@ -51,6 +53,7 @@ class CategoriesPage extends StatelessWidget {
                     title: category.title,
                     icon: category.icon,
                     onTap: () {
+                      context.push(RouteNames.cart);
                       // TODO: Navigate to the selected category.
                     },
                   );

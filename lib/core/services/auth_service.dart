@@ -16,7 +16,7 @@ class AuthService {
 
   Future<bool> hasToken() async {
     final token = await getToken();
-
+    print('AuthService: hasToken() called. Token: $token');
     return token != null && token.trim().isNotEmpty;
   }
 

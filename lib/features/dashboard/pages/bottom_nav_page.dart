@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cart/presentation/pages/cart_page.dart';
 import '../../categories/presentation/pages/categories_page.dart';
-import '../../home/presentation/widgets/account_widget.dart';
-import '../../home/presentation/widgets/languange_constant.dart';
+import '../../account/presentation/widgets/account_widget.dart';
+import '../../account/presentation/widgets/languange_constant.dart';
 import '../controller/bottom_nav_controller.dart';
 import '../widgets/bottom_nav_widget.dart';
 

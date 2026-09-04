@@ -355,7 +355,7 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             width: 42,
             height: 42,
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: AppColors.background,
               borderRadius: BorderRadius.circular(12),

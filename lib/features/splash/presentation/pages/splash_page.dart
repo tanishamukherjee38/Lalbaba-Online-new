@@ -57,12 +57,12 @@ class _SplashPageState extends State<SplashPage> {
 
       final updateAvailable = await _appUpdateService.isUpdateAvailable();
 
-      if (updateAvailable) {
-        if (!mounted) return;
+      // if (updateAvailable) {
+      //   if (!mounted) return;
 
-        context.go(RouteNames.update);
-        return;
-      }
+      //   context.go(RouteNames.update);
+      //   return;
+      // }
 
       // ----------------------------------------------------------
       // 3. TOKEN CHECK
@@ -72,23 +72,31 @@ class _SplashPageState extends State<SplashPage> {
 
       if (!mounted) return;
 
-      if (hasToken) {
-        context.go(RouteNames.bottomnavigation);
-      } else {
-        context.go(RouteNames.login);
-      }
+      // if (hasToken) {
+      //   context.go(RouteNames.bottomnavigation);
+      // } else {
+      //   context.go(RouteNames.splash);
+      // }
+      context.go(RouteNames.bottomnavigation);
     } catch (_) {
       if (!mounted) return;
 
       // If startup check fails unexpectedly,
       // send the user to login rather than leaving them
       // permanently stuck on the splash screen.
-      context.go(RouteNames.login);
+      // context.go(RouteNames.splash);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: FlutterLogo(size: 100)));
+    return const Scaffold(
+      body: Center(
+        child: CircleAvatar(
+          backgroundImage: AssetImage("lib/assets/logo-icon.png"),
+          radius: 75,
+        ),
+      ),
+    );
   }
 }

@@ -22,7 +22,7 @@ class _LanguageSectionState extends State<LanguageSection> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.language, size: 22),
+          const Icon(Icons.translate_rounded, size: 22),
           const SizedBox(width: 12),
 
           Expanded(

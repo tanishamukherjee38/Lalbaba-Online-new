@@ -25,7 +25,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/app_app_bar.dart';
-import '../../../home/presentation/widgets/app_string.dart';
+import '../../../account/presentation/widgets/app_string.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});

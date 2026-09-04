@@ -153,6 +153,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import '../../../../app/config/app_config.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_app_bar.dart';
 import 'app_string.dart';
@@ -253,7 +254,7 @@ class _AccountPageState extends State<AccountPage> {
                 _LogoutButton(label: AppStrings.logOut, onTap: () {}),
                 const SizedBox(height: 16),
                 Text(
-                  "  ${AppStrings.appVersion} 1.0.0",
+                  "${AppStrings.appVersion} ${AppConfig.version}",
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
@@ -510,20 +511,20 @@ class _LogoutButton extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F7),
+          color: AppColors.buttoncolor,
           borderRadius: BorderRadius.circular(28),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, size: 18, color: AppColors.error),
+            Icon(Icons.logout, size: 18, color: AppColors.white),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.error,
+                color: AppColors.white,
               ),
             ),
           ],

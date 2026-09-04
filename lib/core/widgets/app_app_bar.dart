@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../app/theme/app_fonts.dart';
 import '../../app/theme/app_sizes.dart';
 
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -14,7 +15,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.actions,
     this.centerTitle = true,
-    this.automaticallyImplyLeading = true,
+    this.automaticallyImplyLeading = false,
   });
 
   @override
@@ -24,11 +25,12 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
-          color: AppColors.secondary,
+          color: AppColors.primaryLight,
           fontSize: 19,
           fontWeight: FontWeight.w700,
           height: 1.1,
           letterSpacing: 0.2,
+          fontFamily: AppFonts.primary,
         ),
       ),
       centerTitle: centerTitle,

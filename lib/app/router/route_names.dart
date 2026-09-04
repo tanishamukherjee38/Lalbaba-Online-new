@@ -6,6 +6,7 @@ class RouteNames {
   static const splash = '/splash';
 
   static const noInternet = '/no-internet';
+  static const checkout = '/checkout';
 
   static const update = '/update';
 

@@ -5,9 +5,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lalbaba_online/app/router/app_router.dart';
 
-import 'features/home/presentation/widgets/languange_constant.dart';
+import 'features/account/presentation/widgets/languange_constant.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,15 +20,22 @@ class LalbabaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'LALBABA ONLINE',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      // home:
-      routerConfig: appRouter,
-      // RouteNames.login,
-      //LalBabaApp(),
-      //const SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'LALBABA ONLINE',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(useMaterial3: true),
+          // home:
+          routerConfig: appRouter,
+          // RouteNames.login,
+          //LalBabaApp(),
+          //const SplashScreen(),
+        );
+      },
     );
   }
 }
