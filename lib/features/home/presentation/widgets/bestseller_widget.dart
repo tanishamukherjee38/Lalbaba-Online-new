@@ -28,11 +28,7 @@
 // }
 
 import 'package:flutter/material.dart';
-
 import 'sectioncard_widget.dart';
-
-// "All time Best seller" section — same Flipkart card style as
-// TrendingWidget, only the heading and data differ.
 class BestSellerWidget extends StatelessWidget {
   final List<Map<String, dynamic>> products;
   final ValueChanged<Map<String, dynamic>>? onProductTap;

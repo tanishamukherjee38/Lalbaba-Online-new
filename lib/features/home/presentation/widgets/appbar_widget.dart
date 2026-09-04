@@ -317,35 +317,7 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       titleSpacing: 12,
 
-      // ─────────────────────────────────────────────
-      // MENU BUTTON
-      // ─────────────────────────────────────────────
-      // leading: Builder(
-      //   builder: (context) {
-      //     return Padding(
-      //       padding: const EdgeInsets.only(left: 10),
-      //       child: IconButton(
-      //         tooltip: 'Menu',
-      //         onPressed: () {
-      //           Scaffold.of(context).openDrawer();
-      //         },
-      //         style: IconButton.styleFrom(
-      //           backgroundColor:
-      //               AppColors.background.withOpacity(0.12),
-      //           shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.circular(12),
-      //           ),
-      //         ),
-      //         icon: const Icon(
-      //           Icons.menu_rounded,
-      //           color: AppColors.background,
-      //           size: 24,
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // ),
-
+   
       // ─────────────────────────────────────────────
       // LOGO + BRAND
       // ─────────────────────────────────────────────
@@ -457,32 +429,7 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
 
-        // Notification badge
-        // if (notificationCount > 0)
-        //   Positioned(
-        //     right: -2,
-        //     top: -4,
-        //     child: Container(
-        //       constraints: const BoxConstraints(minWidth: 19, minHeight: 19),
-        //       padding: const EdgeInsets.symmetric(horizontal: 4),
-        //       decoration: BoxDecoration(
-        //         color: AppColors.background,
-        //         shape: BoxShape.circle,
-        //         border: Border.all(color: AppColors.error, width: 2),
-        //       ),
-        //       child: Center(
-        //         child: Text(
-        //           notificationCount > 99 ? '99+' : '$notificationCount',
-        //           style: const TextStyle(
-        //             color: AppColors.error,
-        //             fontSize: 9,
-        //             fontWeight: FontWeight.w800,
-        //             height: 1,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
+    
       ],
     );
   }

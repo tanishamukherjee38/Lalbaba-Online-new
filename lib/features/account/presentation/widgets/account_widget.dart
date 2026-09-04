@@ -160,10 +160,6 @@ import 'app_string.dart';
 import 'language_selection.dart';
 import 'languange_constant.dart';
 
-/// Full-page Account screen (converted from the old drawer).
-/// Matches the reference design: avatar header with name/email,
-/// rounded list items with icon + label + chevron, and a
-/// pill-shaped Log Out button at the bottom.
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
