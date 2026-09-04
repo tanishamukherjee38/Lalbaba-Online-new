@@ -9,6 +9,7 @@ import '../../features/dashboard/pages/bottom_nav_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/account/presentation/widgets/account_widget.dart';
 import '../../features/network/presentation/pages/no_internet_page.dart';
+import '../../features/order/presentation/pages/order_details_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/update/presentation/pages/update_page.dart';
 import '../../webView/lalbabaWebView.dart';
@@ -60,6 +61,7 @@ final appRouter = GoRouter(
       builder: (_, __) => const CategoriesPage(),
     ),
     GoRoute(path: RouteNames.account, builder: (_, __) => const AccountPage()),
+    GoRoute(path: RouteNames.orders, builder: (_, __) => const OrderDetailsPage()),
 
     // ==========================================================
     // CHECKOUT

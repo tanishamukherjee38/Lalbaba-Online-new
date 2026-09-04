@@ -101,7 +101,7 @@ class AppStrings {
       AppLanguageConstants.t('Terms of Use', 'ব্যবহারের শর্তাবলী');
 
   static String get trackOrders =>
-      AppLanguageConstants.t('Track Orders', 'অর্ডার ট্র্যাক করুন');
+      AppLanguageConstants.t('My Orders', 'অর্ডার ট্র্যাক করুন');
 
   static String get wishlist => AppLanguageConstants.t('Wishlist', 'উইশলিস্ট');
 

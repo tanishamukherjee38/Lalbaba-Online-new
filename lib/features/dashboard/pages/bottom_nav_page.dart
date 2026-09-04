@@ -5,6 +5,7 @@ import '../../cart/presentation/pages/cart_page.dart';
 import '../../categories/presentation/pages/categories_page.dart';
 import '../../account/presentation/widgets/account_widget.dart';
 import '../../account/presentation/widgets/languange_constant.dart';
+import '../../order/presentation/pages/order_details_page.dart';
 import '../controller/bottom_nav_controller.dart';
 import '../widgets/bottom_nav_widget.dart';
 
@@ -14,33 +15,34 @@ class NavigationPage extends ConsumerStatefulWidget {
   const NavigationPage({super.key});
 
   @override
-  ConsumerState<NavigationPage> createState() {
-    return _NavigationPageState();
-  }
+  ConsumerState<NavigationPage> createState() => _NavigationPageState();
 }
 
 class _NavigationPageState extends ConsumerState<NavigationPage> {
+  // Order must match BottomNavWidget: 0 Home, 1 Categories, 2 Cart, 3 Notifications, 4 More
+  static final List<Widget> _pages = [
+    const HomePage(),
+    const CategoriesPage(),
+    const CartPage(),
+    const OrderDetailsPage(),
+    const AccountPage(), 
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // Language change listen করবে
     return AnimatedBuilder(
       animation: AppLanguageConstants.instance,
       builder: (context, child) {
         final selectedIndex = ref.watch(bottomNavProvider);
 
         return Scaffold(
-          body: selectedIndex == 0
-              ? const HomePage()
-              : selectedIndex == 1
-              ? const CategoriesPage()
-              : selectedIndex == 2
-              ? const CartPage()
-              : const AccountPage(),
-
-          //const HomePage(),
+          body: IndexedStack(
+            index: selectedIndex,
+            children: _pages,
+          ),
           bottomNavigationBar: BottomNavWidget(
             currentIndex: selectedIndex,
-
+            cartCount: 0, // replace with your real cart count provider
             onTap: (index) {
               ref.read(bottomNavProvider.notifier).changeIndex(index);
             },
