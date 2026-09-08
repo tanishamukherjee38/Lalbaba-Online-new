@@ -1,4 +1,422 @@
+
+
+// import 'package:flutter/material.dart';
+
+// import '../../../../app/theme/app_colors.dart';
+// import '../../../../core/constants/asset_constants.dart';
+// import '../../../account/presentation/widgets/app_string.dart';
+// import '../widgets/appbar_widget.dart';
+// import '../widgets/banner_widget.dart';
+// import '../widgets/category_widget.dart';
+// import '../widgets/homechefs_widget.dart';
+// import '../widgets/popularsearch_widget.dart';
+// import '../widgets/recipe_widget.dart';
+// import '../widgets/search_widget.dart';
+// import '../widgets/sectioncard_widget.dart';
+
+// import '../../../product/presentation/pages/product_list_page.dart';
+
+// class HomePage extends StatefulWidget {
+//   const HomePage({super.key});
+
+//   @override
+//   State<HomePage> createState() => _HomePageState();
+// }
+
+// class _HomePageState extends State<HomePage> {
+//   // ================================================================
+//   // CART / NOTIFICATION COUNT
+//   // ================================================================
+
+//   int _notificationCount = 0;
+
+//   final List<String> _categoryNames = [
+//     'For You',
+//     'Rice',
+//     'Spices',
+//   ];
+
+//   final List<Map<String, dynamic>> _trendingProducts = [
+//     {
+//       'name': 'Lalbaba Superior Minikit',
+//       'imageUrl': AssetConstants.miniket,
+//       'price': '₹1,089.00',
+//       'originalPrice': '₹1,299.00',
+//       'discountLabel': '16% off',
+//       'rating': 5.0,
+//     },
+//     {
+//       'name': 'Lalbaba Basmati Steam',
+//       'imageUrl': AssetConstants.basmoti,
+//       'price': '₹230.00',
+//       'originalPrice': '₹270.00',
+//       'discountLabel': '15% off',
+//       'rating': 4.5,
+//     },
+//     {
+//       'name': 'Lalbaba Jeer Rice',
+//       'imageUrl': AssetConstants.jeerrice,
+//       'price': '₹650.00',
+//       'rating': 4.7,
+//     },
+//   ];
+
+//   final List<Map<String, dynamic>> _popularSearch = [
+//     {
+//       'name': 'Minikit',
+//       'imageUrl': AssetConstants.miniket1,
+//       'discountLabel': '10%',
+//     },
+//     {
+//       'name': 'Ratna Basmati',
+//       'imageUrl': AssetConstants.ratna,
+//       'discountLabel': '20%',
+//     },
+//   ];
+
+//   final List<Map<String, dynamic>> _bestSellers = [
+//     {
+//       'name': 'Lalbaba Superior Minikit',
+//       'imageUrl': AssetConstants.miniket,
+//       'price': '₹1,089.00',
+//       'originalPrice': '₹1,299.00',
+//       'discountLabel': '16% off',
+//       'rating': 5.0,
+//     },
+//     {
+//       'name': 'Lalbaba Basmati',
+//       'imageUrl': AssetConstants.baskati,
+//       'price': '₹230.00',
+//       'originalPrice': '₹275.00',
+//       'discountLabel': '16% off',
+//       'rating': 4.5,
+//     },
+//     {
+//       'name': 'Lalbaba Jeer Rice',
+//       'imageUrl': AssetConstants.jeerrice,
+//       'price': '₹650.00',
+//       'originalPrice': '₹750.00',
+//       'discountLabel': '13% off',
+//       'rating': 4.6,
+//     },
+//   ];
+
+//   // ================================================================
+//   // OPEN PRODUCT LIST PAGE
+//   // ================================================================
+
+//   Future<void> _openProductListPage() async {
+//     final result = await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (_) => ProductListPage(
+//           // ========================================================
+//           // CURRENT HOME COUNT PRODUCT LIST-E PATHANO HOCHE
+//           // ========================================================
+
+//           initialCartCount: _notificationCount,
+
+//           // ========================================================
+//           // PRODUCT LIST THEKE ADD HOLE
+//           // SATHE SATHE HOME COUNT UPDATE HOBE
+//           // ========================================================
+
+//           onCartCountChanged: (count) {
+//             if (!mounted) return;
+
+//             setState(() {
+//               _notificationCount = count;
+//             });
+//           },
+//         ),
+//       ),
+//     );
+
+//     if (!mounted) return;
+
+//     // ==============================================================
+//     // PRODUCT LIST THEKE BACK KORAR SOMOY
+//     // FINAL COUNT RECEIVE
+//     // ==============================================================
+
+//     if (result is int) {
+//       setState(() {
+//         _notificationCount = result;
+//       });
+//     }
+//   }
+
+//   // ================================================================
+//   // HOME PAGE PRODUCT ADD TO CART
+//   // ================================================================
+
+//   void _handleAddToCart(
+//     Map<String, dynamic> product,
+//   ) {
+//     setState(() {
+//       _notificationCount++;
+//     });
+//   }
+
+//   // ================================================================
+//   // REFRESH
+//   // ================================================================
+
+//   Future<void> _handleRefresh() async {
+//     await Future.delayed(
+//       const Duration(milliseconds: 900),
+//     );
+
+//     // TODO:
+//     // re-fetch categories / banners / products / etc.
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Scaffold(
+//         backgroundColor: AppColors.background,
+
+//         // ==========================================================
+//         // APP BAR
+//         // ==========================================================
+
+//         appBar: LalBabaAppBar(
+//           // ========================================================
+//           // PRODUCT ADD TO CART COUNT
+//           // ========================================================
+
+//           notificationCount: _notificationCount,
+
+//           onNotificationTap: () {
+//             // TODO: navigate to notifications page
+//           },
+
+//           onCartTap: () {
+//             // TODO: navigate to cart page
+//           },
+//         ),
+
+//         // ==========================================================
+//         // BODY
+//         // ==========================================================
+
+//         body: RefreshIndicator(
+//           onRefresh: _handleRefresh,
+//           color: AppColors.error,
+//           child: CustomScrollView(
+//             physics:
+//                 const AlwaysScrollableScrollPhysics(),
+//             slivers: [
+//               // ====================================================
+//               // SEARCH
+//               // ====================================================
+
+//               SliverToBoxAdapter(
+//                 child: Padding(
+//                   padding: const EdgeInsets.only(
+//                     top: 12,
+//                     bottom: 16,
+//                   ),
+//                   child: SearchWidget(
+//                     onChanged: (query) {
+//                       // TODO: hook up search
+//                     },
+//                   ),
+//                 ),
+//               ),
+
+//               // ====================================================
+//               // STICKY CATEGORY
+//               // ====================================================
+
+//               SliverPersistentHeader(
+//                 pinned: true,
+//                 delegate:
+//                     _StickyHeaderDelegate(
+//                   height: _categoryHeight,
+//                   child: CategoryWidget(
+//                     names: _categoryNames,
+//                     onCategoryTap: (name) {
+//                       _openProductListPage();
+//                     },
+//                   ),
+//                 ),
+//               ),
+
+//               // ====================================================
+//               // EVERYTHING ELSE
+//               // ====================================================
+
+//               SliverToBoxAdapter(
+//                 child: Padding(
+//                   padding: const EdgeInsets.only(
+//                     top: 16,
+//                     bottom: 16,
+//                   ),
+//                   child: Column(
+//                     children: [
+//                       // ==================================================
+//                       // BANNER
+//                       // ==================================================
+
+//                       BannerWidget(
+//                         onBannerTap: (index) {
+//                           // TODO:
+//                           // navigate to relevant offer/category page
+//                         },
+//                       ),
+
+//                       const SizedBox(height: 8),
+
+//                       // ==================================================
+//                       // TRENDING THIS WEEK
+//                       // ==================================================
+
+//                       SectionCardWidget(
+//                         title:
+//                             AppStrings.trendingThisWeek,
+//                         products: _trendingProducts,
+
+//                         onProductTap: (product) {
+//                           // TODO:
+//                           // navigate to product details page
+//                         },
+
+//                         onAddToCart:
+//                             _handleAddToCart,
+
+//                         onViewAllTap: () {
+//                           _openProductListPage();
+//                         },
+//                       ),
+
+//                       // ==================================================
+//                       // POPULAR SEARCH
+//                       // ==================================================
+
+//                       PopularSearchWidget(
+//                         products: _popularSearch,
+
+//                         onProductTap: (product) {
+//                           // TODO:
+//                           // navigate to product details page
+//                         },
+//                       ),
+
+//                       // ==================================================
+//                       // ALL TIME BEST SELLER
+//                       // ==================================================
+
+//                       SectionCardWidget(
+//                         title:
+//                             AppStrings.bestSeller,
+//                         products: _bestSellers,
+
+//                         onProductTap: (product) {
+//                           // TODO:
+//                           // navigate to product details page
+//                         },
+
+//                         onAddToCart:
+//                             _handleAddToCart,
+
+//                         onViewAllTap: () {
+//                           _openProductListPage();
+//                         },
+//                       ),
+
+//                       const SizedBox(height: 8),
+
+//                       // ==================================================
+//                       // RECIPES
+//                       // ==================================================
+
+//                       RecipeWidget(
+//                         onRecipeTap: (index) {
+//                           // TODO:
+//                           // navigate to recipe details page
+//                         },
+//                       ),
+
+//                       const SizedBox(height: 24),
+
+//                       // ==================================================
+//                       // HAPPY HOME CHEFS
+//                       // ==================================================
+
+//                       TestimonialWidget(
+//                         onReviewTap: (index) {
+//                           // TODO:
+//                           // navigate to full review / details page
+//                         },
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   // ================================================================
+//   // CATEGORY HEIGHT
+//   // ================================================================
+
+//   static const double _categoryHeight = 60;
+// }
+
+// // ==================================================================
+// // STICKY HEADER DELEGATE
+// // ==================================================================
+
+// class _StickyHeaderDelegate
+//     extends SliverPersistentHeaderDelegate {
+//   final double height;
+//   final Widget child;
+
+//   _StickyHeaderDelegate({
+//     required this.height,
+//     required this.child,
+//   });
+
+//   @override
+//   double get minExtent => height;
+
+//   @override
+//   double get maxExtent => height;
+
+//   @override
+//   Widget build(
+//     BuildContext context,
+//     double shrinkOffset,
+//     bool overlapsContent,
+//   ) {
+//     return Material(
+//       color: Colors.white,
+//       elevation: overlapsContent ? 2 : 0,
+//       shadowColor:
+//           Colors.black.withValues(alpha: 0.08),
+//       child: child,
+//     );
+//   }
+
+//   @override
+//   bool shouldRebuild(
+//     covariant _StickyHeaderDelegate oldDelegate,
+//   ) {
+//     return oldDelegate.height != height ||
+//         oldDelegate.child != child;
+//   }
+// }
+
+
+
 import 'package:flutter/material.dart';
+
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../account/presentation/widgets/app_string.dart';
@@ -10,6 +428,7 @@ import '../widgets/popularsearch_widget.dart';
 import '../widgets/recipe_widget.dart';
 import '../widgets/search_widget.dart';
 import '../widgets/sectioncard_widget.dart';
+import '../../../product/presentation/pages/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,10 +440,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _notificationCount = 0;
 
-  // Category images/avatars are defined inside CategoryWidget itself
-  // (index-matched with this names list), so only names are passed
-  // from here.
-  final List<String> _categoryNames = ['For You', 'Rice', 'Spices'];
+  final List<String> _categoryNames = [
+    'For You',
+    'Rice',
+    'Spices',
+  ];
+
+  // ===========================================================================
+  // TRENDING PRODUCTS
+  // ===========================================================================
 
   final List<Map<String, dynamic>> _trendingProducts = [
     {
@@ -32,7 +456,7 @@ class _HomePageState extends State<HomePage> {
       'imageUrl': AssetConstants.miniket,
       'price': '₹1,089.00',
       'originalPrice': '₹1,299.00',
-      'discountLabel': '16% off',
+      'discountLabel': '16% OFF',
       'rating': 5.0,
     },
     {
@@ -40,29 +464,39 @@ class _HomePageState extends State<HomePage> {
       'imageUrl': AssetConstants.basmoti,
       'price': '₹230.00',
       'originalPrice': '₹270.00',
-      'discountLabel': '15% off',
+      'discountLabel': '15% OFF',
       'rating': 4.5,
     },
     {
       'name': 'Lalbaba Jeer Rice',
       'imageUrl': AssetConstants.jeerrice,
       'price': '₹650.00',
+      'originalPrice': '',
+      'discountLabel': '',
       'rating': 4.7,
     },
   ];
+
+  // ===========================================================================
+  // POPULAR SEARCH
+  // ===========================================================================
 
   final List<Map<String, dynamic>> _popularSearch = [
     {
       'name': 'Minikit',
       'imageUrl': AssetConstants.miniket1,
-      'discountLabel': '10%',
+      'discountLabel': '10% OFF',
     },
     {
       'name': 'Ratna Basmati',
       'imageUrl': AssetConstants.ratna,
-      'discountLabel': '20%',
+      'discountLabel': '20% OFF',
     },
   ];
+
+  // ===========================================================================
+  // BEST SELLERS
+  // ===========================================================================
 
   final List<Map<String, dynamic>> _bestSellers = [
     {
@@ -70,7 +504,7 @@ class _HomePageState extends State<HomePage> {
       'imageUrl': AssetConstants.miniket,
       'price': '₹1,089.00',
       'originalPrice': '₹1,299.00',
-      'discountLabel': '16% off',
+      'discountLabel': '16% OFF',
       'rating': 5.0,
     },
     {
@@ -78,7 +512,7 @@ class _HomePageState extends State<HomePage> {
       'imageUrl': AssetConstants.baskati,
       'price': '₹230.00',
       'originalPrice': '₹275.00',
-      'discountLabel': '16% off',
+      'discountLabel': '16% OFF',
       'rating': 4.5,
     },
     {
@@ -86,160 +520,223 @@ class _HomePageState extends State<HomePage> {
       'imageUrl': AssetConstants.jeerrice,
       'price': '₹650.00',
       'originalPrice': '₹750.00',
-      'discountLabel': '13% off',
+      'discountLabel': '13% OFF',
       'rating': 4.6,
     },
   ];
 
-  // Add to Cart taps bump the notification badge count (1, 2, 3...)
-  // shown on the bell icon in the app bar.
-  void _handleAddToCart(Map<String, dynamic> product) {
+  // ===========================================================================
+  // OPEN PRODUCT LIST PAGE
+  // ===========================================================================
+
+  Future<void> _openProductListPage({
+    String? sectionType,
+    String title = 'Products',
+  }) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListPage(
+          initialCartCount: _notificationCount,
+
+          onCartCountChanged: (count) {
+            if (!mounted) return;
+
+            setState(() {
+              _notificationCount = count;
+            });
+          },
+
+          sectionType: sectionType,
+          pageTitle: title,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result is int) {
+      setState(() {
+        _notificationCount = result;
+      });
+    }
+  }
+
+  // ===========================================================================
+  // ADD TO CART
+  // ===========================================================================
+
+  void _handleAddToCart(
+    Map<String, dynamic> product,
+  ) {
     setState(() {
       _notificationCount++;
     });
   }
 
-  // Pull-to-refresh handler. Replace the delay with real data
-  // fetching (API calls) whenever this page is wired up to a
-  // backend — the RefreshIndicator spinner shows for as long as
-  // this future takes to complete.
+  // ===========================================================================
+  // REFRESH
+  // ===========================================================================
+
   Future<void> _handleRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 900));
-    // TODO: re-fetch categories / banners / products / etc. here
-    // and setState with the new data once available.
+    await Future.delayed(
+      const Duration(
+        milliseconds: 900,
+      ),
+    );
+
+    // TODO:
+    // Refetch categories
+    // Refetch banners
+    // Refetch products
   }
 
   @override
   Widget build(BuildContext context) {
+    const double categoryHeight = 60;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.background,
 
+        // =====================================================================
+        // APP BAR
+        // =====================================================================
+
         appBar: LalBabaAppBar(
           notificationCount: _notificationCount,
+
           onNotificationTap: () {
-            // TODO: navigate to notifications page
+            // TODO: notification action
           },
+
           onCartTap: () {
-            // TODO: navigate to cart page
+            // TODO: cart action
           },
         ),
+
+        // =====================================================================
+        // BODY
+        // =====================================================================
+
         body: RefreshIndicator(
           onRefresh: _handleRefresh,
           color: AppColors.error,
-          // Platform-default physics — BouncingScrollPhysics (iOS
-          // style) stops RefreshIndicator from detecting the
-          // overscroll correctly on Android, which is why the
-          // loader wasn't showing up right.
+
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
+
             slivers: [
-              // ─────────────────────────
-              // SEARCH — scrolls away normally
-              // ─────────────────────────
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 16),
-                  child: SearchWidget(
-                    onChanged: (query) {
-                      // TODO: hook up search
-                    },
-                  ),
-                ),
+              // =================================================================
+              // SEARCH
+              // =================================================================
+
+              const SliverToBoxAdapter(
+                child: SearchWidget(),
               ),
 
-              // ─────────────────────────
-              // CATEGORY — pinned right below the app bar;
-              // stays fixed while everything else (including
-              // search) scrolls underneath it.
-              // ─────────────────────────
+              // =================================================================
+              // STICKY CATEGORY
+              // =================================================================
+
               SliverPersistentHeader(
                 pinned: true,
+
                 delegate: _StickyHeaderDelegate(
-                  height: _categoryHeight,
+                  height: categoryHeight,
+
                   child: CategoryWidget(
                     names: _categoryNames,
+
                     onCategoryTap: (name) {
-                      // TODO: navigate to category listing page
+                      _openProductListPage();
                     },
                   ),
                 ),
               ),
 
-              // ─────────────────────────
-              // EVERYTHING ELSE — scrolls under the pinned
-              // category bar.
-              // ─────────────────────────
+              // =================================================================
+              // HOME CONTENT
+              // =================================================================
+
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    bottom: 20,
+                  ),
+
                   child: Column(
                     children: [
-                      BannerWidget(
-                        onBannerTap: (index) {
-                          // TODO: navigate to the relevant offer/category page
-                        },
-                      ),
-                      const SizedBox(height: 8),
+                      // =========================================================
+                      // BANNER
+                      // =========================================================
 
-                      // ─────────────────────────
+                      const BannerWidget(),
+
+                      // =========================================================
                       // TRENDING THIS WEEK
-                      // ─────────────────────────
+                      // =========================================================
+
                       SectionCardWidget(
                         title: AppStrings.trendingThisWeek,
                         products: _trendingProducts,
+
                         onProductTap: (product) {
-                          // TODO: navigate to product details page
+                          // TODO: product details
                         },
+
                         onAddToCart: _handleAddToCart,
+
                         onViewAllTap: () {
-                          // TODO: navigate to full trending list
+                          _openProductListPage(
+                            sectionType: 'trending',
+                            title: 'Trending this week',
+                          );
                         },
                       ),
+
+                      // =========================================================
+                      // POPULAR SEARCH
+                      // =========================================================
 
                       PopularSearchWidget(
                         products: _popularSearch,
-                        onProductTap: (product) {
-                          // TODO: navigate to product details page
-                        },
                       ),
 
-                      // ─────────────────────────
-                      // ALL TIME BEST SELLER
-                      // ─────────────────────────
+                      // =========================================================
+                      // BEST SELLER
+                      // =========================================================
+
                       SectionCardWidget(
                         title: AppStrings.bestSeller,
                         products: _bestSellers,
+
                         onProductTap: (product) {
-                          // TODO: navigate to product details page
+                          // TODO: product details
                         },
+
                         onAddToCart: _handleAddToCart,
+
                         onViewAllTap: () {
-                          // TODO: navigate to full best-seller list
+                          _openProductListPage(
+                            sectionType: 'bestSeller',
+                            title: 'All time Best seller',
+                          );
                         },
                       ),
 
-                      const SizedBox(height: 8),
+                      // =========================================================
+                      // RECIPE
+                      // =========================================================
 
-                      // ─────────────────────────
-                      // RECIPES
-                      // ─────────────────────────
-                      RecipeWidget(
-                        onRecipeTap: (index) {
-                          // TODO: navigate to the recipe details page
-                        },
-                      ),
+                      const RecipeWidget(),
 
-                      const SizedBox(height: 24),
+                      // =========================================================
+                      // TESTIMONIAL
+                      // =========================================================
 
-                      // ─────────────────────────
-                      // HAPPY HOME CHEFS (customer reviews)
-                      // ─────────────────────────
-                      TestimonialWidget(
-                        onReviewTap: (index) {
-                          // TODO: navigate to the full review / details page
-                        },
-                      ),
+                      const TestimonialWidget(),
                     ],
                   ),
                 ),
@@ -250,19 +747,21 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // Matches CategoryWidget's own fixed height.
-  static const double _categoryHeight = 60;
 }
 
-/// Pins `child` at a fixed height as a sliver so it stays put right
-/// below the app bar while the rest of the page scrolls underneath
-/// it — used here to keep CategoryWidget visible at all times.
-class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+// ==============================================================================
+// STICKY HEADER DELEGATE
+// ==============================================================================
+
+class _StickyHeaderDelegate
+    extends SliverPersistentHeaderDelegate {
   final double height;
   final Widget child;
 
-  _StickyHeaderDelegate({required this.height, required this.child});
+  _StickyHeaderDelegate({
+    required this.height,
+    required this.child,
+  });
 
   @override
   double get minExtent => height;
@@ -278,14 +777,23 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return Material(
       color: Colors.white,
+
       elevation: overlapsContent ? 2 : 0,
-      shadowColor: Colors.black.withValues(alpha: 0.08),
+
+      shadowColor: Colors.black.withValues(
+        alpha: 0.08,
+      ),
+
       child: child,
     );
   }
 
   @override
-  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
-    return oldDelegate.height != height || oldDelegate.child != child;
+  bool shouldRebuild(
+    covariant _StickyHeaderDelegate oldDelegate,
+  ) {
+    return oldDelegate.height != height ||
+        oldDelegate.child != child;
   }
 }
+
