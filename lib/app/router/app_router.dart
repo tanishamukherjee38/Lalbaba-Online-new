@@ -2,12 +2,13 @@
 // Why: Define and manage all application routes in one centralized place.
 import 'package:go_router/go_router.dart';
 
+import '../../features/address/presentation/page/address.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/categories/presentation/pages/categories_page.dart';
 import '../../features/dashboard/pages/bottom_nav_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/account/presentation/widgets/account_widget.dart';
+import '../../features/account/presentation/page/account_widget.dart';
 import '../../features/network/presentation/pages/no_internet_page.dart';
 import '../../features/order/presentation/pages/order_details_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
@@ -61,7 +62,10 @@ final appRouter = GoRouter(
       builder: (_, __) => const CategoriesPage(),
     ),
     GoRoute(path: RouteNames.account, builder: (_, __) => const AccountPage()),
-    GoRoute(path: RouteNames.orders, builder: (_, __) => const OrderDetailsPage()),
+    GoRoute(
+      path: RouteNames.orders,
+      builder: (_, __) => const OrderDetailsPage(),
+    ),
 
     // ==========================================================
     // CHECKOUT
@@ -84,5 +88,8 @@ final appRouter = GoRouter(
         return const CartPage();
       },
     ),
+    //Address
+    // =====================
+    GoRoute(path: RouteNames.address, builder: (_, __) => const AddressPage()),
   ],
 );

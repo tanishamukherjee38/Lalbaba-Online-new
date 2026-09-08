@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_fonts.dart';
-import '../../app/theme/app_sizes.dart';
 
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -20,22 +19,32 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.primary,
-      title: Text(
-        title,
-        style: const TextStyle(
-          color: AppColors.primaryLight,
-          fontSize: 19,
-          fontWeight: FontWeight.w700,
-          height: 1.1,
-          letterSpacing: 0.2,
-          fontFamily: AppFonts.primary,
+    return SafeArea(
+      child: AppBar(
+        backgroundColor: AppColors.primary,
+        automaticallyImplyLeading: false,
+        leading: automaticallyImplyLeading
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                color: AppColors.primaryLight,
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.primaryLight,
+            fontSize: 19,
+            fontWeight: FontWeight.w700,
+            height: 1.1,
+            letterSpacing: 0.2,
+            fontFamily: AppFonts.primary,
+          ),
         ),
+        centerTitle: centerTitle,
+        // automaticallyImplyLeading: automaticallyImplyLeading,
+        actions: actions,
       ),
-      centerTitle: centerTitle,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      actions: actions,
     );
   }
 

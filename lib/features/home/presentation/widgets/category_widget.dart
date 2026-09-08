@@ -229,11 +229,11 @@
 // }
 
 import 'package:flutter/material.dart';
+
 class CategoryWidget extends StatefulWidget {
   final List<String> names;
   final ValueChanged<String>? onCategoryTap;
 
-  
   final int? selectedIndex;
 
   const CategoryWidget({
@@ -248,7 +248,6 @@ class CategoryWidget extends StatefulWidget {
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
-
   static const Color _primary = Color(0xFFf70707);
   static const Color _background = Color(0xFFffffff);
   static const Color _black = Color(0xFF212121);
@@ -321,14 +320,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: _accent.withOpacity(0.30),
+                            color: _accent.withValues(alpha: 0.30),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
                         ]
                       : [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -341,8 +340,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 13.5,
-                    fontWeight:
-                        isSelected ? FontWeight.w700 : FontWeight.w600,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                     color: isSelected ? Colors.white : _grey,
                     letterSpacing: 0.1,
                   ),

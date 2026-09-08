@@ -21,6 +21,7 @@ Future<void> showNoInternetModal({
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 200),
     pageBuilder: (ctx, anim1, anim2) {
+      // ignore: deprecated_member_use
       return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -45,7 +46,7 @@ Future<void> showNoInternetModal({
                         Container(
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.08),
+                            color: Colors.red.withValues(alpha: 0.08),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -326,6 +327,7 @@ class _LalbabaHomeState extends State<LalbabaHome> {
       ),
       child: PopScope(
         canPop: false,
+        // ignore: deprecated_member_use
         onPopInvoked: (didPop) async {
           if (didPop) return;
 

@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -12,7 +10,6 @@ class SearchWidget extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
 
-
   final List<String> searchHints;
 
   const SearchWidget({
@@ -20,10 +17,7 @@ class SearchWidget extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.onTap,
-    this.searchHints = const [
-      'Search for Rice',
-      'Search for Spices',
-    ],
+    this.searchHints = const ['Search for Rice', 'Search for Spices'],
   });
 
   @override
@@ -73,13 +67,10 @@ class _SearchWidgetState extends State<SearchWidget> {
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: const Color(0xFFE6E6E6),
-            width: 1,
-          ),
+          border: Border.all(color: const Color(0xFFE6E6E6), width: 1),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -110,11 +101,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
             const SizedBox(width: 8),
 
-            Container(
-              width: 1,
-              height: 20,
-              color: const Color(0xFFE6E6E6),
-            ),
+            Container(width: 1, height: 20, color: const Color(0xFFE6E6E6)),
 
             const SizedBox(width: 8),
 
@@ -135,9 +122,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 children: [
                   if (showRotatingHint)
                     IgnorePointer(
-                      child: _VerticalRotatingHint(
-                        hints: widget.searchHints,
-                      ),
+                      child: _VerticalRotatingHint(hints: widget.searchHints),
                     ),
                   TextField(
                     controller: _controller,

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/asset_constants.dart';
@@ -264,10 +262,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   final Widget child;
 
-  _StickyHeaderDelegate({
-    required this.height,
-    required this.child,
-  });
+  _StickyHeaderDelegate({required this.height, required this.child});
 
   @override
   double get minExtent => height;
@@ -284,7 +279,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     return Material(
       color: Colors.white,
       elevation: overlapsContent ? 2 : 0,
-      shadowColor: Colors.black.withOpacity(0.08),
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       child: child,
     );
   }

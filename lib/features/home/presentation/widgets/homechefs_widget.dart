@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class TestimonialWidget extends StatefulWidget {
   final ValueChanged<int>? onReviewTap;
 
-  const TestimonialWidget({
-    super.key,
-    this.onReviewTap,
-  });
+  const TestimonialWidget({super.key, this.onReviewTap});
 
   @override
   State<TestimonialWidget> createState() => _TestimonialWidgetState();
@@ -216,7 +213,7 @@ class _ReviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -249,7 +246,7 @@ class _ReviewCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
+                        color: Colors.black.withValues(alpha: 0.12),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -340,7 +337,7 @@ class _ReviewImage extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(_navy),
               value: progress.expectedTotalBytes != null
                   ? progress.cumulativeBytesLoaded /
-                      (progress.expectedTotalBytes ?? 1)
+                        (progress.expectedTotalBytes ?? 1)
                   : null,
             ),
           ),

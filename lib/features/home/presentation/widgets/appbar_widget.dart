@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
@@ -30,7 +28,6 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       titleSpacing: 12,
 
-   
       // ─────────────────────────────────────────────
       // LOGO + BRAND
       // ─────────────────────────────────────────────
@@ -46,7 +43,7 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.10),
+                  color: Colors.black.withValues(alpha: 0.10),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),
@@ -127,7 +124,7 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: 'Notifications',
           onPressed: onNotificationTap,
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.background.withOpacity(0.12),
+            backgroundColor: AppColors.background.withValues(alpha: 0.12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -141,8 +138,6 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
         ),
-
-    
       ],
     );
   }
@@ -150,56 +145,6 @@ class LalBabaAppBar extends StatelessWidget implements PreferredSizeWidget {
   // ─────────────────────────────────────────────
   // CART BUTTON
   // ─────────────────────────────────────────────
-  Widget _buildCartButton() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        IconButton(
-          tooltip: 'Cart',
-          onPressed: onCartTap,
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.background.withOpacity(0.12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          icon: const Icon(
-            Icons.shopping_bag_rounded,
-            color: AppColors.background,
-            size: 23,
-          ),
-        ),
-
-        // Cart badge
-        if (cartCount > 0)
-          Positioned(
-            right: -2,
-            top: -4,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 19, minHeight: 19),
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.error, width: 2),
-              ),
-              child: Center(
-                child: Text(
-                  cartCount > 99 ? '99+' : '$cartCount',
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    height: 1,
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

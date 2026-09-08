@@ -1,15 +1,10 @@
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 
 class BannerWidget extends StatefulWidget {
   final ValueChanged<int>? onBannerTap;
 
-  const BannerWidget({
-    super.key,
-    this.onBannerTap,
-  });
+  const BannerWidget({super.key, this.onBannerTap});
 
   @override
   State<BannerWidget> createState() => _BannerWidgetState();
@@ -17,7 +12,6 @@ class BannerWidget extends StatefulWidget {
 
 class _BannerWidgetState extends State<BannerWidget> {
   static const Color _primary = Color(0xFFF70707);
-  static const Color _secondary = Color(0xFFEEE4E4);
   static const Color _black = Color(0xFF000000);
   static const Color _grey = Color(0xFF9E9E9E);
 
@@ -32,7 +26,6 @@ class _BannerWidgetState extends State<BannerWidget> {
   late final PageController _pageController;
   Timer? _autoScrollTimer;
 
-
   late final int _initialPage;
 
   int _currentIndex = 0;
@@ -43,9 +36,7 @@ class _BannerWidgetState extends State<BannerWidget> {
   void initState() {
     super.initState();
 
-    _initialPage = _bannerCount > 0
-        ? 10000 - (10000 % _bannerCount)
-        : 0;
+    _initialPage = _bannerCount > 0 ? 10000 - (10000 % _bannerCount) : 0;
 
     _pageController = PageController(
       initialPage: _initialPage,
@@ -65,8 +56,7 @@ class _BannerWidgetState extends State<BannerWidget> {
       return;
     }
 
-    final int currentPage =
-        _pageController.page?.round() ?? _initialPage;
+    final int currentPage = _pageController.page?.round() ?? _initialPage;
 
     _pageController.animateToPage(
       currentPage + 1,
@@ -124,17 +114,15 @@ class _BannerWidgetState extends State<BannerWidget> {
                   if (_pageController.hasClients &&
                       _pageController.position.haveDimensions) {
                     final double page =
-                        _pageController.page ??
-                        _initialPage.toDouble();
+                        _pageController.page ?? _initialPage.toDouble();
 
-                    scale = (1 - ((page - pageIndex).abs() * 0.06))
-                        .clamp(0.94, 1.0);
+                    scale = (1 - ((page - pageIndex).abs() * 0.06)).clamp(
+                      0.94,
+                      1.0,
+                    );
                   }
 
-                  return Transform.scale(
-                    scale: scale,
-                    child: child,
-                  );
+                  return Transform.scale(scale: scale, child: child);
                 },
 
                 child: Padding(
@@ -149,15 +137,13 @@ class _BannerWidgetState extends State<BannerWidget> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: _black.withOpacity(0.08),
+                              color: _black.withValues(alpha: 0.08),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
                           ],
                         ),
-                        child: _BannerImage(
-                          imageUrl: imageUrl,
-                        ),
+                        child: _BannerImage(imageUrl: imageUrl),
                       ),
                     ),
                   ),
@@ -173,32 +159,26 @@ class _BannerWidgetState extends State<BannerWidget> {
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              _bannerCount,
-              (index) {
-                final bool isActive = index == _currentIndex;
+            children: List.generate(_bannerCount, (index) {
+              final bool isActive = index == _currentIndex;
 
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 220),
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  width: isActive ? 18 : 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? _primary
-                        : _grey.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                );
-              },
-            ),
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: isActive ? 18 : 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isActive ? _primary : _grey.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              );
+            }),
           ),
         ],
       ],
     );
   }
 }
-
 
 // ============================================================
 // BANNER IMAGE
@@ -207,9 +187,7 @@ class _BannerWidgetState extends State<BannerWidget> {
 class _BannerImage extends StatelessWidget {
   final String imageUrl;
 
-  const _BannerImage({
-    required this.imageUrl,
-  });
+  const _BannerImage({required this.imageUrl});
 
   static const Color _secondary = Color(0xFFEEE4E4);
   static const Color _primary = Color(0xFFF70707);
@@ -222,50 +200,42 @@ class _BannerImage extends StatelessWidget {
       height: double.infinity,
       fit: BoxFit.cover,
 
-      loadingBuilder: (
-        BuildContext context,
-        Widget child,
-        ImageChunkEvent? progress,
-      ) {
-        if (progress == null) {
-          return child;
-        }
+      loadingBuilder:
+          (BuildContext context, Widget child, ImageChunkEvent? progress) {
+            if (progress == null) {
+              return child;
+            }
 
-        return Container(
-          color: _secondary,
-          alignment: Alignment.center,
-          child: SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(_primary),
-              value: progress.expectedTotalBytes != null
-                  ? progress.cumulativeBytesLoaded /
-                      progress.expectedTotalBytes!
-                  : null,
-            ),
-          ),
-        );
-      },
+            return Container(
+              color: _secondary,
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: const AlwaysStoppedAnimation<Color>(_primary),
+                  value: progress.expectedTotalBytes != null
+                      ? progress.cumulativeBytesLoaded /
+                            progress.expectedTotalBytes!
+                      : null,
+                ),
+              ),
+            );
+          },
 
-      errorBuilder: (
-        BuildContext context,
-        Object error,
-        StackTrace? stackTrace,
-      ) {
-        return Container(
-          color: _secondary,
-          alignment: Alignment.center,
-          child: const Icon(
-            Icons.image_not_supported_outlined,
-            color: _primary,
-            size: 26,
-          ),
-        );
-      },
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
+            return Container(
+              color: _secondary,
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.image_not_supported_outlined,
+                color: _primary,
+                size: 26,
+              ),
+            );
+          },
     );
   }
 }
-

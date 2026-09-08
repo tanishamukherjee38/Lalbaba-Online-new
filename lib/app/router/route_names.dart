@@ -28,4 +28,5 @@ class RouteNames {
 
   static const profile = '/profile';
   static const account = '/account';
+  static const address = '/address';
 }

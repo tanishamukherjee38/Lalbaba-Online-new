@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class RecipeWidget extends StatefulWidget {
   final ValueChanged<int>? onRecipeTap;
 
-  const RecipeWidget({
-    super.key,
-    this.onRecipeTap,
-  });
+  const RecipeWidget({super.key, this.onRecipeTap});
 
   @override
   State<RecipeWidget> createState() => _RecipeWidgetState();
@@ -157,7 +154,7 @@ class _RecipeWidgetState extends State<RecipeWidget> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: _black.withOpacity(0.10),
+                              color: _black.withValues(alpha: 0.10),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -258,7 +255,7 @@ class _RecipeImage extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(_primary),
               value: progress.expectedTotalBytes != null
                   ? progress.cumulativeBytesLoaded /
-                      (progress.expectedTotalBytes ?? 1)
+                        (progress.expectedTotalBytes ?? 1)
                   : null,
             ),
           ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ProductCardWidget extends StatelessWidget {
@@ -47,12 +46,10 @@ class ProductCardWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: const Color(0xFFF0F0F0),
-            ),
+            border: Border.all(color: const Color(0xFFF0F0F0)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -69,7 +66,6 @@ class ProductCardWidget extends StatelessWidget {
               // ============================================================
               // IMAGE
               // ============================================================
-
               SizedBox(
                 height: imageHeight,
                 width: double.infinity,
@@ -82,11 +78,7 @@ class ProductCardWidget extends StatelessWidget {
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
-                          loadingBuilder: (
-                            context,
-                            child,
-                            loadingProgress,
-                          ) {
+                          loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
                             }
@@ -97,19 +89,14 @@ class ProductCardWidget extends StatelessWidget {
                                 height: 18,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
                                     accentColor,
                                   ),
                                 ),
                               ),
                             );
                           },
-                          errorBuilder: (
-                            context,
-                            error,
-                            stackTrace,
-                          ) {
+                          errorBuilder: (context, error, stackTrace) {
                             return const Center(
                               child: Icon(
                                 Icons.image_outlined,
@@ -125,9 +112,7 @@ class ProductCardWidget extends StatelessWidget {
                     // ------------------------------------------------------
                     // DISCOUNT BADGE
                     // ------------------------------------------------------
-
-                    if (discountLabel != null &&
-                        discountLabel!.isNotEmpty)
+                    if (discountLabel != null && discountLabel!.isNotEmpty)
                       Positioned(
                         top: 8,
                         left: 8,
@@ -141,7 +126,7 @@ class ProductCardWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                             boxShadow: [
                               BoxShadow(
-                                color: accentColor.withOpacity(0.35),
+                                color: accentColor.withValues(alpha: 0.35),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -169,26 +154,18 @@ class ProductCardWidget extends StatelessWidget {
               // Expanded is the important part.
               // It takes whatever height is left between image and button.
               // ============================================================
-
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10,
-                    7,
-                    10,
-                    3,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(10, 7, 10, 3),
                   child: showPriceAndRating
                       ? Column(
                           mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // ------------------------------------------------
                             // PRODUCT NAME
                             // Fixed 2-line area.
                             // ------------------------------------------------
-
                             SizedBox(
                               height: 32,
                               width: double.infinity,
@@ -212,36 +189,32 @@ class ProductCardWidget extends StatelessWidget {
                             // Fixed height so missing rating doesn't move
                             // the price/button.
                             // ------------------------------------------------
-
                             SizedBox(
                               height: 20,
                               width: double.infinity,
                               child: rating > 0
                                   ? Align(
-                                      alignment:
-                                          Alignment.centerLeft,
+                                      alignment: Alignment.centerLeft,
                                       child: Container(
-                                        padding:
-                                            const EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                           horizontal: 5,
                                           vertical: 2,
                                         ),
                                         decoration: BoxDecoration(
                                           color: _ratingGreen,
-                                          borderRadius:
-                                              BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
                                         child: Row(
-                                          mainAxisSize:
-                                              MainAxisSize.min,
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
                                               rating.toStringAsFixed(1),
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 10.5,
-                                                fontWeight:
-                                                    FontWeight.w700,
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
                                             const SizedBox(width: 2),
@@ -263,21 +236,18 @@ class ProductCardWidget extends StatelessWidget {
                             // PRICE
                             // Fixed height.
                             // ------------------------------------------------
-
                             SizedBox(
                               height: 23,
                               width: double.infinity,
                               child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   if (price.isNotEmpty)
                                     Flexible(
                                       child: Text(
                                         price,
                                         maxLines: 1,
-                                        overflow:
-                                            TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           fontSize: 14.5,
                                           fontWeight: FontWeight.w800,
@@ -297,14 +267,12 @@ class ProductCardWidget extends StatelessWidget {
                                       child: Text(
                                         originalPrice!,
                                         maxLines: 1,
-                                        overflow:
-                                            TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           fontSize: 11,
                                           color: _grey,
                                           decoration:
-                                              TextDecoration
-                                                  .lineThrough,
+                                              TextDecoration.lineThrough,
                                           decorationColor: _grey,
                                         ),
                                       ),
@@ -342,18 +310,12 @@ class ProductCardWidget extends StatelessWidget {
               // This section is NOT inside Expanded.
               // Therefore its position stays fixed at the bottom.
               // ============================================================
-
               if (onAddToCart != null)
                 SizedBox(
                   height: 38,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      8,
-                      1,
-                      8,
-                      7,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(8, 1, 8, 7),
                     child: SizedBox(
                       width: double.infinity,
                       height: 30,
@@ -368,8 +330,7 @@ class ProductCardWidget extends StatelessWidget {
                             horizontal: 4,
                             vertical: 0,
                           ),
-                          tapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -379,10 +340,7 @@ class ProductCardWidget extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: const [
-                              Icon(
-                                Icons.add_shopping_cart_rounded,
-                                size: 14,
-                              ),
+                              Icon(Icons.add_shopping_cart_rounded, size: 14),
                               SizedBox(width: 5),
                               Text(
                                 'Add to Cart',

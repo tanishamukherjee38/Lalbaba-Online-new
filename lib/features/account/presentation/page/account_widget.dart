@@ -153,12 +153,14 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../app/config/app_config.dart';
+import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_app_bar.dart';
-import 'app_string.dart';
-import 'language_selection.dart';
-import 'languange_constant.dart';
+import '../widgets/app_string.dart';
+import '../widgets/language_selection.dart';
+import '../widgets/languange_constant.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -193,6 +195,14 @@ class _AccountPageState extends State<AccountPage> {
                 //   onChanged: AppLanguageConstants.change,
                 // ),
                 const SizedBox(height: 8),
+                _MenuTile(
+                  icon: Icons.location_on_outlined,
+                  label: AppStrings.address,
+                  onTap: () {
+                    // Navigate to the address page
+                    GoRouter.of(context).push(RouteNames.address);
+                  },
+                ),
                 _MenuTile(
                   icon: Icons.info_outline,
                   label: AppStrings.aboutUs,

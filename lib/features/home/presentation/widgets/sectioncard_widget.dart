@@ -1,9 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'product_card_widget.dart';
-
 
 class SectionCardWidget extends StatelessWidget {
   final String title;
@@ -40,8 +37,11 @@ class SectionCardWidget extends StatelessWidget {
         // after removing the container's own margins, the rail's
         // internal padding, and the single gap between the 2 cards.
         final double cardWidth =
-            (availableWidth - (_outerMargin * 2) - (_railPadding * 2) - _cardGap) /
-                2;
+            (availableWidth -
+                (_outerMargin * 2) -
+                (_railPadding * 2) -
+                _cardGap) /
+            2;
 
         return Container(
           margin: const EdgeInsets.symmetric(
@@ -54,7 +54,7 @@ class SectionCardWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.12),
+                color: Colors.grey.withValues(alpha: 0.12),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -64,9 +64,7 @@ class SectionCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: _railPadding,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: _railPadding),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -91,8 +89,11 @@ class SectionCardWidget extends StatelessWidget {
                               color: Color(0xFFE23F1C),
                             ),
                           ),
-                          Icon(Icons.chevron_right,
-                              size: 18, color: Color(0xFFE23F1C)),
+                          Icon(
+                            Icons.chevron_right,
+                            size: 18,
+                            color: Color(0xFFE23F1C),
+                          ),
                         ],
                       ),
                     ),
@@ -106,12 +107,9 @@ class SectionCardWidget extends StatelessWidget {
                 height: 250,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: _railPadding,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: _railPadding),
                   itemCount: products.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(width: _cardGap),
+                  separatorBuilder: (_, __) => const SizedBox(width: _cardGap),
                   itemBuilder: (context, index) {
                     final product = products[index];
                     return ProductCardWidget(

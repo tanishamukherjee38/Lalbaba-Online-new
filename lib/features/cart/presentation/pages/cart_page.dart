@@ -33,7 +33,11 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: AppStrings.cart),
+      appBar: AppAppBar(
+        title: AppStrings.cart,
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [

@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_colors.dart'; // <-- adjust path to your AppColors file
+import '../../account/presentation/page/account_widget.dart';
 import '../../cart/presentation/pages/cart_page.dart';
 import '../../categories/presentation/pages/categories_page.dart';
-import '../../account/presentation/widgets/account_widget.dart';
 import '../../account/presentation/widgets/languange_constant.dart';
 import '../../order/presentation/pages/order_details_page.dart' hide AppColors;
 import '../controller/bottom_nav_controller.dart';
@@ -43,10 +43,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
         await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(
-              "Exit App",
-              style: TextStyle(color: AppColors.black),
-            ),
+            title: Text("Exit App", style: TextStyle(color: AppColors.black)),
             content: const Text(
               "Are you sure you want to exit this app?",
               style: TextStyle(color: AppColors.black),
@@ -93,10 +90,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
             // further to do here either way.
           },
           child: Scaffold(
-            body: IndexedStack(
-              index: selectedIndex,
-              children: _pages,
-            ),
+            body: IndexedStack(index: selectedIndex, children: _pages),
             bottomNavigationBar: BottomNavWidget(
               currentIndex: selectedIndex,
               cartCount: 0, // replace with your real cart count provider

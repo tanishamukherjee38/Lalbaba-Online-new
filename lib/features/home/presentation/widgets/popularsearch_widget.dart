@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class PopularSearchWidget extends StatelessWidget {
@@ -31,7 +29,7 @@ class PopularSearchWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: _accent.withOpacity(0.08),
+            color: _accent.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -53,7 +51,7 @@ class PopularSearchWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(9),
                   boxShadow: [
                     BoxShadow(
-                      color: _accent.withOpacity(0.35),
+                      color: _accent.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -136,7 +134,7 @@ class _PopularSearchTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
+                color: Colors.black.withValues(alpha: 0.06),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -168,8 +166,9 @@ class _PopularSearchTile extends StatelessWidget {
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(_accent),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                _accent,
+                              ),
                             ),
                           ),
                         );
@@ -199,7 +198,7 @@ class _PopularSearchTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color: _accent.withOpacity(0.35),
+                              color: _accent.withValues(alpha: 0.35),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -253,7 +252,7 @@ class _PopularSearchTile extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: _accent.withOpacity(0.1),
+                        color: _accent.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: const Text(
