@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_sizes.dart';
 import '../../account/presentation/widgets/app_string.dart';
 
+/// Simple data model for bottom navigation items.
 class NavItemData {
   final IconData icon;
   final IconData activeIcon;
@@ -14,57 +17,6 @@ class NavItemData {
     required this.activeIcon,
     required this.label,
   });
-}
-
-class _NotchClipper extends CustomClipper<Path> {
-  final double notchRadius;
-  final double notchMargin;
-  final double notchDepth;
-  final double topCornerRadius;
-
-  const _NotchClipper({
-    required this.notchRadius,
-    required this.notchDepth,
-    this.notchMargin = 8,
-    this.topCornerRadius = 22,
-  });
-
-  @override
-  Path getClip(Size size) {
-    final double centerX = size.width / 2;
-    final double r = notchRadius + notchMargin;
-    final double curveWidth = r * 1.6;
-
-    final path = Path()
-      ..moveTo(0, topCornerRadius)
-      ..quadraticBezierTo(0, 0, topCornerRadius, 0)
-      ..lineTo(centerX - curveWidth, 0)
-      ..cubicTo(
-        centerX - curveWidth * 0.55, 0,
-        centerX - r, notchDepth,
-        centerX, notchDepth,
-      )
-      ..cubicTo(
-        centerX + r, notchDepth,
-        centerX + curveWidth * 0.55, 0,
-        centerX + curveWidth, 0,
-      )
-      ..lineTo(size.width - topCornerRadius, 0)
-      ..quadraticBezierTo(size.width, 0, size.width, topCornerRadius)
-      ..lineTo(size.width, size.height)
-      ..lineTo(0, size.height)
-      ..close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant _NotchClipper oldClipper) {
-    return oldClipper.notchRadius != notchRadius ||
-        oldClipper.notchDepth != notchDepth ||
-        oldClipper.notchMargin != notchMargin ||
-        oldClipper.topCornerRadius != topCornerRadius;
-  }
 }
 
 class BottomNavWidget extends StatelessWidget {
@@ -81,12 +33,18 @@ class BottomNavWidget extends StatelessWidget {
 
   static const int cartIndex = 2;
 
-  static const double _cartGap = 10.0;
-  static const double _liftAmount = 6.0;
-  static const double _heightScale = 0.82;
-  static const double _fabSinkFraction = 0.5;
-  static const double _notchMargin = 8.0;
-  static const double _topCornerRadius = 22.0;
+  // Bar height and FAB placement — tune these two numbers together:
+  // smaller _heightScale = shorter bar. If you shrink it a lot and the
+  // FAB starts crowding the icons, lower _fabOverlapFraction too (more of
+  // the FAB will then sit above the bar instead of dipping into it).
+  static const double _heightScale = 0.85;
+  static const double _fabOverlapFraction = 0.55;
+  static const double _fabClearanceGap = 6.0;
+
+  // Bar surface color is hardcoded to plain white on purpose — matching
+  // the reference UI exactly and removing any risk of a themed color
+  // (like AppColors.background) carrying an unwanted tint.
+  static const Color _barColor = Colors.white;
 
   List<NavItemData> get _sideItems => [
         NavItemData(
@@ -113,6 +71,7 @@ class BottomNavWidget extends StatelessWidget {
 
   Widget _buildNavItem({
     required double itemWidth,
+    required double iconSlotHeight,
     required NavItemData data,
     required bool isSelected,
     required VoidCallback onTap,
@@ -123,55 +82,37 @@ class BottomNavWidget extends StatelessWidget {
       width: itemWidth,
       child: InkWell(
         onTap: onTap,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 180),
-                  opacity: isSelected ? 1 : 0,
-                  child: Container(
-                    width: 4,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-                TweenAnimationBuilder<double>(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  tween: Tween(begin: 1.0, end: isSelected ? 1.08 : 1.0),
-                  builder: (context, scale, child) => Transform.scale(
-                    scale: scale,
-                    child: child,
-                  ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Every item's icon lives inside a slot of the SAME height
+              // (iconSlotHeight) — this is what keeps every label, including
+              // the cart's, aligned on one line.
+              SizedBox(
+                height: iconSlotHeight,
+                child: Center(
                   child: Icon(
                     isSelected ? data.activeIcon : data.icon,
                     color: color,
                     size: AppSizes.iconMedium,
                   ),
                 ),
-                SizedBox(height: AppSizes.spacingXXSmall),
-                Text(
-                  data.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.w500,
-                  ),
+              ),
+              SizedBox(height: AppSizes.spacingXXSmall),
+              Text(
+                data.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  fontWeight:
+                      isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -180,25 +121,24 @@ class BottomNavWidget extends StatelessWidget {
 
   Widget _buildCartLabelSlot({
     required double itemWidth,
+    required double iconSlotHeight,
     required bool isSelected,
-    required double fabSinkHeight,
   }) {
     return SizedBox(
       width: itemWidth,
-      child: GestureDetector(
+      child: InkWell(
         onTap: () => onTap(cartIndex),
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Flexible(
-              child: SizedBox(height: fabSinkHeight + _cartGap),
-            ),
-            SizedBox(height: AppSizes.spacingXXSmall),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Invisible placeholder — same height as the icon slot above,
+              // and tall enough that the floating cart button (whose lowest
+              // point is fixed by _fabClearanceGap) can never reach the text.
+              SizedBox(height: iconSlotHeight),
+              SizedBox(height: AppSizes.spacingXXSmall),
+              Text(
                 '${AppStrings.cart} ($cartCount)',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -209,8 +149,8 @@ class BottomNavWidget extends StatelessWidget {
                       isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -222,11 +162,19 @@ class BottomNavWidget extends StatelessWidget {
 
     final double navBarHeight = AppSizes.bottomNavHeight * _heightScale;
     final double fabSize = AppSizes.fabSize;
-    final double fabSinkHeight = fabSize * _fabSinkFraction;
+    final double fabOverlap = fabSize * _fabOverlapFraction; // portion above the bar
+    final double fabVisibleInsideBar = fabSize - fabOverlap; // portion hanging into the bar
     final double bottomInset = MediaQuery.paddingOf(context).bottom;
 
-    final double stackHeight =
-        navBarHeight + bottomInset + fabSinkHeight + _liftAmount;
+    // Shared slot height used by every item (including the cart's
+    // placeholder): big enough for a normal icon, AND big enough to clear
+    // the part of the FAB that dips into the bar, plus a visible gap.
+    final double iconSlotHeight = math.max(
+      AppSizes.iconMedium,
+      fabVisibleInsideBar + _fabClearanceGap,
+    );
+
+    final double stackHeight = navBarHeight + bottomInset + fabOverlap;
 
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
@@ -240,107 +188,105 @@ class BottomNavWidget extends StatelessWidget {
           clipBehavior: Clip.none,
           alignment: Alignment.topCenter,
           children: [
-            Positioned.fill(
-              child: ClipPath(
-                clipper: _NotchClipper(
-                  notchRadius: fabSize / 2,
-                  notchDepth: fabSinkHeight,
-                  notchMargin: _notchMargin,
-                  topCornerRadius: _topCornerRadius,
+            // ==========================================================
+            // FLAT WHITE BAR — colored ONLY where the bar actually is.
+            // The space above it (where the FAB floats) is left fully
+            // transparent so the page behind it just shows through as-is.
+            // ==========================================================
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: _barColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      spreadRadius: 0,
+                      offset: const Offset(0, -3),
+                    ),
+                  ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.10),
-                        blurRadius: 20,
-                        spreadRadius: -2,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: fabSinkHeight),
-                      SizedBox(
-                        height: navBarHeight,
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            final double itemWidth =
-                                constraints.maxWidth / 5;
+                child: SafeArea(
+                  top: false,
+                  child: SizedBox(
+                    height: navBarHeight,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final double itemWidth = constraints.maxWidth / 5;
 
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                _buildNavItem(
-                                  itemWidth: itemWidth,
-                                  data: _sideItems[0],
-                                  isSelected: currentIndex == 0,
-                                  onTap: () => onTap(0),
-                                ),
-                                _buildNavItem(
-                                  itemWidth: itemWidth,
-                                  data: _sideItems[1],
-                                  isSelected: currentIndex == 1,
-                                  onTap: () => onTap(1),
-                                ),
-                                _buildCartLabelSlot(
-                                  itemWidth: itemWidth,
-                                  isSelected: isCartSelected,
-                                  fabSinkHeight: fabSinkHeight,
-                                ),
-                                _buildNavItem(
-                                  itemWidth: itemWidth,
-                                  data: _sideItems[2],
-                                  isSelected: currentIndex == 3,
-                                  onTap: () => onTap(3),
-                                ),
-                                _buildNavItem(
-                                  itemWidth: itemWidth,
-                                  data: _sideItems[3],
-                                  isSelected: currentIndex == 4,
-                                  onTap: () => onTap(4),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(height: bottomInset + _liftAmount),
-                    ],
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildNavItem(
+                              itemWidth: itemWidth,
+                              iconSlotHeight: iconSlotHeight,
+                              data: _sideItems[0],
+                              isSelected: currentIndex == 0,
+                              onTap: () => onTap(0),
+                            ),
+                            _buildNavItem(
+                              itemWidth: itemWidth,
+                              iconSlotHeight: iconSlotHeight,
+                              data: _sideItems[1],
+                              isSelected: currentIndex == 1,
+                              onTap: () => onTap(1),
+                            ),
+                            _buildCartLabelSlot(
+                              itemWidth: itemWidth,
+                              iconSlotHeight: iconSlotHeight,
+                              isSelected: isCartSelected,
+                            ),
+                            _buildNavItem(
+                              itemWidth: itemWidth,
+                              iconSlotHeight: iconSlotHeight,
+                              data: _sideItems[2],
+                              isSelected: currentIndex == 3,
+                              onTap: () => onTap(3),
+                            ),
+                            _buildNavItem(
+                              itemWidth: itemWidth,
+                              iconSlotHeight: iconSlotHeight,
+                              data: _sideItems[3],
+                              isSelected: currentIndex == 4,
+                              onTap: () => onTap(4),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
+
+            // ==========================================================
+            // FLOATING RED CART BUTTON — solid color circle, white ring,
+            // floats above the bar. Matches the reference UI's cart icon.
+            // ==========================================================
             Positioned(
               top: 0,
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () => onTap(cartIndex),
+                customBorder: const CircleBorder(),
                 child: Container(
                   width: fabSize,
                   height: fabSize,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primary,
-                        Color.lerp(AppColors.primary, Colors.black, 0.15)!,
-                      ],
-                    ),
+                    color: AppColors.primary,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppColors.background,
+                      color: _barColor,
                       width: AppSizes.spacingXXSmall,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.35),
-                        blurRadius: 14,
-                        spreadRadius: 0,
-                        offset: const Offset(0, 5),
+                        color: Colors.black.withValues(alpha: 0.20),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
