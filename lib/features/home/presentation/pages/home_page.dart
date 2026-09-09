@@ -1,10 +1,13 @@
 
-
 // import 'package:flutter/material.dart';
 
 // import '../../../../app/theme/app_colors.dart';
 // import '../../../../core/constants/asset_constants.dart';
+// import '../../../../core/widgets/app_shimmer.dart';
+
 // import '../../../account/presentation/widgets/app_string.dart';
+// import '../../../product/presentation/pages/product_list_page.dart';
+
 // import '../widgets/appbar_widget.dart';
 // import '../widgets/banner_widget.dart';
 // import '../widgets/category_widget.dart';
@@ -14,8 +17,6 @@
 // import '../widgets/search_widget.dart';
 // import '../widgets/sectioncard_widget.dart';
 
-// import '../../../product/presentation/pages/product_list_page.dart';
-
 // class HomePage extends StatefulWidget {
 //   const HomePage({super.key});
 
@@ -24,11 +25,17 @@
 // }
 
 // class _HomePageState extends State<HomePage> {
-//   // ================================================================
-//   // CART / NOTIFICATION COUNT
-//   // ================================================================
-
 //   int _notificationCount = 0;
+
+//   // ===========================================================================
+//   // SHIMMER LOADING STATE
+//   // ===========================================================================
+
+//   bool _isLoading = true;
+
+//   // ===========================================================================
+//   // CATEGORY
+//   // ===========================================================================
 
 //   final List<String> _categoryNames = [
 //     'For You',
@@ -36,13 +43,17 @@
 //     'Spices',
 //   ];
 
+//   // ===========================================================================
+//   // TRENDING PRODUCTS
+//   // ===========================================================================
+
 //   final List<Map<String, dynamic>> _trendingProducts = [
 //     {
 //       'name': 'Lalbaba Superior Minikit',
 //       'imageUrl': AssetConstants.miniket,
 //       'price': '₹1,089.00',
 //       'originalPrice': '₹1,299.00',
-//       'discountLabel': '16% off',
+//       'discountLabel': '16% OFF',
 //       'rating': 5.0,
 //     },
 //     {
@@ -50,29 +61,39 @@
 //       'imageUrl': AssetConstants.basmoti,
 //       'price': '₹230.00',
 //       'originalPrice': '₹270.00',
-//       'discountLabel': '15% off',
+//       'discountLabel': '15% OFF',
 //       'rating': 4.5,
 //     },
 //     {
 //       'name': 'Lalbaba Jeer Rice',
 //       'imageUrl': AssetConstants.jeerrice,
 //       'price': '₹650.00',
+//       'originalPrice': '',
+//       'discountLabel': '',
 //       'rating': 4.7,
 //     },
 //   ];
+
+//   // ===========================================================================
+//   // POPULAR SEARCH
+//   // ===========================================================================
 
 //   final List<Map<String, dynamic>> _popularSearch = [
 //     {
 //       'name': 'Minikit',
 //       'imageUrl': AssetConstants.miniket1,
-//       'discountLabel': '10%',
+//       'discountLabel': '10% OFF',
 //     },
 //     {
 //       'name': 'Ratna Basmati',
 //       'imageUrl': AssetConstants.ratna,
-//       'discountLabel': '20%',
+//       'discountLabel': '20% OFF',
 //     },
 //   ];
+
+//   // ===========================================================================
+//   // BEST SELLERS
+//   // ===========================================================================
 
 //   final List<Map<String, dynamic>> _bestSellers = [
 //     {
@@ -80,7 +101,7 @@
 //       'imageUrl': AssetConstants.miniket,
 //       'price': '₹1,089.00',
 //       'originalPrice': '₹1,299.00',
-//       'discountLabel': '16% off',
+//       'discountLabel': '16% OFF',
 //       'rating': 5.0,
 //     },
 //     {
@@ -88,7 +109,7 @@
 //       'imageUrl': AssetConstants.baskati,
 //       'price': '₹230.00',
 //       'originalPrice': '₹275.00',
-//       'discountLabel': '16% off',
+//       'discountLabel': '16% OFF',
 //       'rating': 4.5,
 //     },
 //     {
@@ -96,31 +117,63 @@
 //       'imageUrl': AssetConstants.jeerrice,
 //       'price': '₹650.00',
 //       'originalPrice': '₹750.00',
-//       'discountLabel': '13% off',
+//       'discountLabel': '13% OFF',
 //       'rating': 4.6,
 //     },
 //   ];
 
-//   // ================================================================
-//   // OPEN PRODUCT LIST PAGE
-//   // ================================================================
+//   // ===========================================================================
+//   // INIT STATE
+//   // ===========================================================================
 
-//   Future<void> _openProductListPage() async {
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     _loadHomeData();
+//   }
+
+//   // ===========================================================================
+//   // LOAD HOME DATA
+//   // ===========================================================================
+
+//   Future<void> _loadHomeData() async {
+//     // TODO:
+//     // এখানে পরে তোমার actual API call বসাবে।
+//     //
+//     // Example:
+//     //
+//     // await Future.wait([
+//     //   fetchCategories(),
+//     //   fetchBanners(),
+//     //   fetchTrendingProducts(),
+//     //   fetchBestSellers(),
+//     // ]);
+
+//     await Future.delayed(
+//       const Duration(milliseconds: 900),
+//     );
+
+//     if (!mounted) return;
+
+//     setState(() {
+//       _isLoading = false;
+//     });
+//   }
+
+//   // ===========================================================================
+//   // OPEN PRODUCT LIST PAGE
+//   // ===========================================================================
+
+//   Future<void> _openProductListPage({
+//     String? sectionType,
+//     String title = 'Products',
+//   }) async {
 //     final result = await Navigator.push(
 //       context,
 //       MaterialPageRoute(
-//         builder: (_) => ProductListPage(
-//           // ========================================================
-//           // CURRENT HOME COUNT PRODUCT LIST-E PATHANO HOCHE
-//           // ========================================================
-
+//         builder: (context) => ProductListPage(
 //           initialCartCount: _notificationCount,
-
-//           // ========================================================
-//           // PRODUCT LIST THEKE ADD HOLE
-//           // SATHE SATHE HOME COUNT UPDATE HOBE
-//           // ========================================================
-
 //           onCartCountChanged: (count) {
 //             if (!mounted) return;
 
@@ -128,16 +181,13 @@
 //               _notificationCount = count;
 //             });
 //           },
+//           sectionType: sectionType,
+//           pageTitle: title,
 //         ),
 //       ),
 //     );
 
 //     if (!mounted) return;
-
-//     // ==============================================================
-//     // PRODUCT LIST THEKE BACK KORAR SOMOY
-//     // FINAL COUNT RECEIVE
-//     // ==============================================================
 
 //     if (result is int) {
 //       setState(() {
@@ -146,9 +196,9 @@
 //     }
 //   }
 
-//   // ================================================================
-//   // HOME PAGE PRODUCT ADD TO CART
-//   // ================================================================
+//   // ===========================================================================
+//   // ADD TO CART
+//   // ===========================================================================
 
 //   void _handleAddToCart(
 //     Map<String, dynamic> product,
@@ -158,223 +208,358 @@
 //     });
 //   }
 
-//   // ================================================================
-//   // REFRESH
-//   // ================================================================
-
-//   Future<void> _handleRefresh() async {
-//     await Future.delayed(
-//       const Duration(milliseconds: 900),
-//     );
-
-//     // TODO:
-//     // re-fetch categories / banners / products / etc.
-//   }
+//   // ===========================================================================
+//   // BUILD
+//   // ===========================================================================
 
 //   @override
 //   Widget build(BuildContext context) {
+//     const double categoryHeight = 60;
+
 //     return SafeArea(
 //       child: Scaffold(
 //         backgroundColor: AppColors.background,
 
-//         // ==========================================================
+//         // =====================================================================
 //         // APP BAR
-//         // ==========================================================
+//         // =====================================================================
 
 //         appBar: LalBabaAppBar(
-//           // ========================================================
-//           // PRODUCT ADD TO CART COUNT
-//           // ========================================================
-
 //           notificationCount: _notificationCount,
-
 //           onNotificationTap: () {
-//             // TODO: navigate to notifications page
+//             // TODO: notification action
 //           },
-
 //           onCartTap: () {
-//             // TODO: navigate to cart page
+//             // TODO: cart action
 //           },
 //         ),
 
-//         // ==========================================================
+//         // =====================================================================
 //         // BODY
-//         // ==========================================================
+//         //
+//         // IMPORTANT:
+//         // RefreshIndicator remove করা হয়েছে।
+//         // তাই red loader / spinner আর দেখাবে না।
+//         // =====================================================================
 
-//         body: RefreshIndicator(
-//           onRefresh: _handleRefresh,
-//           color: AppColors.error,
-//           child: CustomScrollView(
-//             physics:
-//                 const AlwaysScrollableScrollPhysics(),
-//             slivers: [
-//               // ====================================================
-//               // SEARCH
-//               // ====================================================
+//         body: _isLoading
+//             ? _buildShimmerBody()
+//             : CustomScrollView(
+//                 physics: const AlwaysScrollableScrollPhysics(),
+//                 slivers: [
+//                   // ===========================================================
+//                   // SEARCH
+//                   // ===========================================================
+// const SliverToBoxAdapter(
+//   child: SizedBox(height: 10),
+// ),
+//                   const SliverToBoxAdapter(
+//                     child: SearchWidget(),
+//                   ),
 
-//               SliverToBoxAdapter(
-//                 child: Padding(
-//                   padding: const EdgeInsets.only(
-//                     top: 12,
-//                     bottom: 16,
+//                   // ===========================================================
+//                   // STICKY CATEGORY
+//                   // ===========================================================
+
+//                   SliverPersistentHeader(
+//                     pinned: true,
+//                     delegate: _StickyHeaderDelegate(
+//                       height: categoryHeight,
+//                       child: CategoryWidget(
+//                         names: _categoryNames,
+//                         onCategoryTap: (name) {
+//                           _openProductListPage(
+//                             title: name,
+//                           );
+//                         },
+//                       ),
+//                     ),
 //                   ),
-//                   child: SearchWidget(
-//                     onChanged: (query) {
-//                       // TODO: hook up search
-//                     },
+
+//                   // ===========================================================
+//                   // HOME CONTENT
+//                   // ===========================================================
+
+//                   SliverToBoxAdapter(
+//                     child: Padding(
+//                       padding: const EdgeInsets.only(
+//                         top: 8,
+//                         bottom: 20,
+//                       ),
+//                       child: Column(
+//                         children: [
+//                           // ===================================================
+//                           // BANNER
+//                           // ===================================================
+
+//                           const BannerWidget(),
+
+//                           // ===================================================
+//                           // TRENDING THIS WEEK
+//                           // ===================================================
+
+//                           SectionCardWidget(
+//                             title: AppStrings.trendingThisWeek,
+//                             products: _trendingProducts,
+//                             onProductTap: (product) {
+//                               // TODO: product details
+//                             },
+//                             onAddToCart: _handleAddToCart,
+//                             onViewAllTap: () {
+//                               _openProductListPage(
+//                                 sectionType: 'trending',
+//                                 title: 'Trending this week',
+//                               );
+//                             },
+//                           ),
+
+//                           // ===================================================
+//                           // POPULAR SEARCH
+//                           // ===================================================
+
+//                           PopularSearchWidget(
+//                             products: _popularSearch,
+//                           ),
+
+//                           // ===================================================
+//                           // BEST SELLER
+//                           // ===================================================
+
+//                           SectionCardWidget(
+//                             title: AppStrings.bestSeller,
+//                             products: _bestSellers,
+//                             onProductTap: (product) {
+//                               // TODO: product details
+//                             },
+//                             onAddToCart: _handleAddToCart,
+//                             onViewAllTap: () {
+//                               _openProductListPage(
+//                                 sectionType: 'bestSeller',
+//                                 title: 'All time Best seller',
+//                               );
+//                             },
+//                           ),
+
+//                           // ===================================================
+//                           // RECIPE
+//                           // ===================================================
+
+//                           const RecipeWidget(),
+
+//                           // ===================================================
+//                           // TESTIMONIAL
+//                           // ===================================================
+
+//                           const TestimonialWidget(),
+//                         ],
+//                       ),
+//                     ),
 //                   ),
-//                 ),
+//                 ],
 //               ),
-
-//               // ====================================================
-//               // STICKY CATEGORY
-//               // ====================================================
-
-//               SliverPersistentHeader(
-//                 pinned: true,
-//                 delegate:
-//                     _StickyHeaderDelegate(
-//                   height: _categoryHeight,
-//                   child: CategoryWidget(
-//                     names: _categoryNames,
-//                     onCategoryTap: (name) {
-//                       _openProductListPage();
-//                     },
-//                   ),
-//                 ),
-//               ),
-
-//               // ====================================================
-//               // EVERYTHING ELSE
-//               // ====================================================
-
-//               SliverToBoxAdapter(
-//                 child: Padding(
-//                   padding: const EdgeInsets.only(
-//                     top: 16,
-//                     bottom: 16,
-//                   ),
-//                   child: Column(
-//                     children: [
-//                       // ==================================================
-//                       // BANNER
-//                       // ==================================================
-
-//                       BannerWidget(
-//                         onBannerTap: (index) {
-//                           // TODO:
-//                           // navigate to relevant offer/category page
-//                         },
-//                       ),
-
-//                       const SizedBox(height: 8),
-
-//                       // ==================================================
-//                       // TRENDING THIS WEEK
-//                       // ==================================================
-
-//                       SectionCardWidget(
-//                         title:
-//                             AppStrings.trendingThisWeek,
-//                         products: _trendingProducts,
-
-//                         onProductTap: (product) {
-//                           // TODO:
-//                           // navigate to product details page
-//                         },
-
-//                         onAddToCart:
-//                             _handleAddToCart,
-
-//                         onViewAllTap: () {
-//                           _openProductListPage();
-//                         },
-//                       ),
-
-//                       // ==================================================
-//                       // POPULAR SEARCH
-//                       // ==================================================
-
-//                       PopularSearchWidget(
-//                         products: _popularSearch,
-
-//                         onProductTap: (product) {
-//                           // TODO:
-//                           // navigate to product details page
-//                         },
-//                       ),
-
-//                       // ==================================================
-//                       // ALL TIME BEST SELLER
-//                       // ==================================================
-
-//                       SectionCardWidget(
-//                         title:
-//                             AppStrings.bestSeller,
-//                         products: _bestSellers,
-
-//                         onProductTap: (product) {
-//                           // TODO:
-//                           // navigate to product details page
-//                         },
-
-//                         onAddToCart:
-//                             _handleAddToCart,
-
-//                         onViewAllTap: () {
-//                           _openProductListPage();
-//                         },
-//                       ),
-
-//                       const SizedBox(height: 8),
-
-//                       // ==================================================
-//                       // RECIPES
-//                       // ==================================================
-
-//                       RecipeWidget(
-//                         onRecipeTap: (index) {
-//                           // TODO:
-//                           // navigate to recipe details page
-//                         },
-//                       ),
-
-//                       const SizedBox(height: 24),
-
-//                       // ==================================================
-//                       // HAPPY HOME CHEFS
-//                       // ==================================================
-
-//                       TestimonialWidget(
-//                         onReviewTap: (index) {
-//                           // TODO:
-//                           // navigate to full review / details page
-//                         },
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
 //       ),
 //     );
 //   }
 
-//   // ================================================================
-//   // CATEGORY HEIGHT
-//   // ================================================================
+//   // ===========================================================================
+//   // HOME PAGE SHIMMER
+//   // ===========================================================================
 
-//   static const double _categoryHeight = 60;
+//   Widget _buildShimmerBody() {
+//     return ListView(
+//       physics: const AlwaysScrollableScrollPhysics(),
+//       padding: const EdgeInsets.symmetric(
+//         horizontal: 14,
+//         vertical: 12,
+//       ),
+//       children: [
+//         // =====================================================================
+//         // SEARCH SHIMMER
+//         // =====================================================================
+
+//         const AppShimmer(
+//           height: 48,
+//           radius: 10,
+//         ),
+
+//         const SizedBox(height: 16),
+
+//         // =====================================================================
+//         // CATEGORY SHIMMER
+//         // =====================================================================
+
+//         SizedBox(
+//           height: 36,
+//           child: ListView.separated(
+//             scrollDirection: Axis.horizontal,
+//             physics: const NeverScrollableScrollPhysics(),
+//             itemCount: _categoryNames.length,
+//             separatorBuilder: (context, index) {
+//               return const SizedBox(width: 10);
+//             },
+//             itemBuilder: (context, index) {
+//               return const AppShimmer(
+//                 width: 90,
+//                 height: 36,
+//                 radius: 20,
+//               );
+//             },
+//           ),
+//         ),
+
+//         const SizedBox(height: 16),
+
+//         // =====================================================================
+//         // BANNER SHIMMER
+//         // =====================================================================
+
+//         const AppShimmer(
+//           height: 150,
+//           radius: 12,
+//         ),
+
+//         const SizedBox(height: 20),
+
+//         // =====================================================================
+//         // TRENDING TITLE SHIMMER
+//         // =====================================================================
+
+//         const AppShimmer(
+//           width: 160,
+//           height: 18,
+//           radius: 6,
+//         ),
+
+//         const SizedBox(height: 10),
+
+//         // =====================================================================
+//         // TRENDING PRODUCT SHIMMER
+//         //
+//         // height 220 থেকে 260 করা হয়েছে,
+//         // যাতে ProductShimmer overflow না করে।
+//         // =====================================================================
+
+//         SizedBox(
+//           height: 260,
+//           child: ListView.separated(
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 3,
+//             separatorBuilder: (context, index) {
+//               return const SizedBox(width: 10);
+//             },
+//             itemBuilder: (context, index) {
+//               return const SizedBox(
+//                 width: 150,
+//                 child: ProductShimmer(),
+//               );
+//             },
+//           ),
+//         ),
+
+//         const SizedBox(height: 20),
+
+//         // =====================================================================
+//         // POPULAR SEARCH TITLE
+//         // =====================================================================
+
+//         const AppShimmer(
+//           width: 160,
+//           height: 18,
+//           radius: 6,
+//         ),
+
+//         const SizedBox(height: 10),
+
+//         // =====================================================================
+//         // POPULAR SEARCH SHIMMER
+//         // =====================================================================
+
+//         SizedBox(
+//           height: 90,
+//           child: ListView.separated(
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 2,
+//             separatorBuilder: (context, index) {
+//               return const SizedBox(width: 10);
+//             },
+//             itemBuilder: (context, index) {
+//               return const AppShimmer(
+//                 width: 140,
+//                 height: 90,
+//                 radius: 10,
+//               );
+//             },
+//           ),
+//         ),
+
+//         const SizedBox(height: 20),
+
+//         // =====================================================================
+//         // BEST SELLER TITLE
+//         // =====================================================================
+
+//         const AppShimmer(
+//           width: 160,
+//           height: 18,
+//           radius: 6,
+//         ),
+
+//         const SizedBox(height: 10),
+
+//         // =====================================================================
+//         // BEST SELLER PRODUCT SHIMMER
+//         // =====================================================================
+
+//         SizedBox(
+//           height: 260,
+//           child: ListView.separated(
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 3,
+//             separatorBuilder: (context, index) {
+//               return const SizedBox(width: 10);
+//             },
+//             itemBuilder: (context, index) {
+//               return const SizedBox(
+//                 width: 150,
+//                 child: ProductShimmer(),
+//               );
+//             },
+//           ),
+//         ),
+
+//         const SizedBox(height: 20),
+
+//         // =====================================================================
+//         // RECIPE SHIMMER
+//         // =====================================================================
+
+//         const AppShimmer(
+//           height: 160,
+//           radius: 12,
+//         ),
+
+//         const SizedBox(height: 20),
+
+//         // =====================================================================
+//         // TESTIMONIAL SHIMMER
+//         // =====================================================================
+
+//         const AppShimmer(
+//           height: 120,
+//           radius: 12,
+//         ),
+
+//         const SizedBox(height: 20),
+//       ],
+//     );
+//   }
 // }
 
-// // ==================================================================
+// // =============================================================================
 // // STICKY HEADER DELEGATE
-// // ==================================================================
+// // =============================================================================
 
-// class _StickyHeaderDelegate
-//     extends SliverPersistentHeaderDelegate {
+// class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 //   final double height;
 //   final Widget child;
 
@@ -398,8 +583,9 @@
 //     return Material(
 //       color: Colors.white,
 //       elevation: overlapsContent ? 2 : 0,
-//       shadowColor:
-//           Colors.black.withValues(alpha: 0.08),
+//       shadowColor: Colors.black.withValues(
+//         alpha: 0.08,
+//       ),
 //       child: child,
 //     );
 //   }
@@ -413,13 +599,15 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/widgets/app_shimmer.dart';
+
 import '../../../account/presentation/widgets/app_string.dart';
+import '../../../product/presentation/pages/product_list_page.dart';
+
 import '../widgets/appbar_widget.dart';
 import '../widgets/banner_widget.dart';
 import '../widgets/category_widget.dart';
@@ -428,17 +616,27 @@ import '../widgets/popularsearch_widget.dart';
 import '../widgets/recipe_widget.dart';
 import '../widgets/search_widget.dart';
 import '../widgets/sectioncard_widget.dart';
-import '../../../product/presentation/pages/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() =>
+      _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _notificationCount = 0;
+
+  bool _isLoading = true;
+
+  // ===========================================================================
+  // HOME CATEGORY TABS
+
+  
+  // ===========================================================================
 
   final List<String> _categoryNames = [
     'For You',
@@ -447,29 +645,51 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // ===========================================================================
+  // SEARCH CATEGORIES
+  
+  // ===========================================================================
+
+  final List<String> _searchCategories = [
+    'Minikit',
+    'Banskathi',
+    'Chamanmani',
+    'Basmati',
+    'Gobindo Bhog',
+    'Jeera Rice',
+    'Ratna',
+  ];
+
+  // ===========================================================================
   // TRENDING PRODUCTS
   // ===========================================================================
 
-  final List<Map<String, dynamic>> _trendingProducts = [
+  final List<Map<String, dynamic>>
+      _trendingProducts = [
     {
-      'name': 'Lalbaba Superior Minikit',
-      'imageUrl': AssetConstants.miniket,
+      'name':
+          'Lalbaba Superior Minikit',
+      'imageUrl':
+          AssetConstants.miniket,
       'price': '₹1,089.00',
       'originalPrice': '₹1,299.00',
       'discountLabel': '16% OFF',
       'rating': 5.0,
     },
     {
-      'name': 'Lalbaba Basmati Steam',
-      'imageUrl': AssetConstants.basmoti,
+      'name':
+          'Lalbaba Basmati Steam',
+      'imageUrl':
+          AssetConstants.basmoti,
       'price': '₹230.00',
       'originalPrice': '₹270.00',
       'discountLabel': '15% OFF',
       'rating': 4.5,
     },
     {
-      'name': 'Lalbaba Jeer Rice',
-      'imageUrl': AssetConstants.jeerrice,
+      'name':
+          'Lalbaba Jeer Rice',
+      'imageUrl':
+          AssetConstants.jeerrice,
       'price': '₹650.00',
       'originalPrice': '',
       'discountLabel': '',
@@ -481,15 +701,18 @@ class _HomePageState extends State<HomePage> {
   // POPULAR SEARCH
   // ===========================================================================
 
-  final List<Map<String, dynamic>> _popularSearch = [
+  final List<Map<String, dynamic>>
+      _popularSearch = [
     {
       'name': 'Minikit',
-      'imageUrl': AssetConstants.miniket1,
+      'imageUrl':
+          AssetConstants.miniket1,
       'discountLabel': '10% OFF',
     },
     {
       'name': 'Ratna Basmati',
-      'imageUrl': AssetConstants.ratna,
+      'imageUrl':
+          AssetConstants.ratna,
       'discountLabel': '20% OFF',
     },
   ];
@@ -498,10 +721,13 @@ class _HomePageState extends State<HomePage> {
   // BEST SELLERS
   // ===========================================================================
 
-  final List<Map<String, dynamic>> _bestSellers = [
+  final List<Map<String, dynamic>>
+      _bestSellers = [
     {
-      'name': 'Lalbaba Superior Minikit',
-      'imageUrl': AssetConstants.miniket,
+      'name':
+          'Lalbaba Superior Minikit',
+      'imageUrl':
+          AssetConstants.miniket,
       'price': '₹1,089.00',
       'originalPrice': '₹1,299.00',
       'discountLabel': '16% OFF',
@@ -509,15 +735,18 @@ class _HomePageState extends State<HomePage> {
     },
     {
       'name': 'Lalbaba Basmati',
-      'imageUrl': AssetConstants.baskati,
+      'imageUrl':
+          AssetConstants.baskati,
       'price': '₹230.00',
       'originalPrice': '₹275.00',
       'discountLabel': '16% OFF',
       'rating': 4.5,
     },
     {
-      'name': 'Lalbaba Jeer Rice',
-      'imageUrl': AssetConstants.jeerrice,
+      'name':
+          'Lalbaba Jeer Rice',
+      'imageUrl':
+          AssetConstants.jeerrice,
       'price': '₹650.00',
       'originalPrice': '₹750.00',
       'discountLabel': '13% OFF',
@@ -526,27 +755,83 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // ===========================================================================
-  // OPEN PRODUCT LIST PAGE
+  // PRODUCTS USED BY SEARCH
+  // ===========================================================================
+
+  List<Map<String, dynamic>>
+      get _searchProducts {
+    final Map<String,
+            Map<String, dynamic>>
+        unique = {};
+
+    for (final product in [
+      ..._trendingProducts,
+      ..._bestSellers,
+    ]) {
+      final String name =
+          product['name']
+                  ?.toString()
+                  .trim() ??
+              '';
+
+      if (name.isNotEmpty) {
+        unique[name] = product;
+      }
+    }
+
+    return unique.values.toList();
+  }
+
+  // ===========================================================================
+  // INIT
+  // ===========================================================================
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadHomeData();
+  }
+
+  Future<void> _loadHomeData() async {
+    await Future.delayed(
+      const Duration(
+        milliseconds: 900,
+      ),
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  // ===========================================================================
+  // PRODUCT LIST
   // ===========================================================================
 
   Future<void> _openProductListPage({
     String? sectionType,
     String title = 'Products',
   }) async {
-    final result = await Navigator.push(
+    final result =
+        await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductListPage(
-          initialCartCount: _notificationCount,
-
-          onCartCountChanged: (count) {
+        builder: (context) =>
+            ProductListPage(
+          initialCartCount:
+              _notificationCount,
+          onCartCountChanged:
+              (count) {
             if (!mounted) return;
 
             setState(() {
-              _notificationCount = count;
+              _notificationCount =
+                  count;
             });
           },
-
           sectionType: sectionType,
           pageTitle: title,
         ),
@@ -563,7 +848,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ===========================================================================
-  // ADD TO CART
+  // CART
   // ===========================================================================
 
   void _handleAddToCart(
@@ -575,21 +860,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ===========================================================================
-  // REFRESH
+  // SEARCH CATEGORY CLICK
   // ===========================================================================
 
-  Future<void> _handleRefresh() async {
-    await Future.delayed(
-      const Duration(
-        milliseconds: 900,
-      ),
+  void _handleSearchCategoryTap(
+    String category,
+  ) {
+    debugPrint(
+      'Search category: $category',
     );
 
-    // TODO:
-    // Refetch categories
-    // Refetch banners
-    // Refetch products
+    _openProductListPage(
+      title: category,
+    );
   }
+
+  // ===========================================================================
+  // SEARCH PRODUCT CLICK
+  // ===========================================================================
+
+  void _handleSearchProductTap(
+    Map<String, dynamic> product,
+  ) {
+    debugPrint(
+      'Search product: '
+      '${product['name']}',
+    );
+
+  
+  }
+
+  // ===========================================================================
+  // BUILD
+  // ===========================================================================
 
   @override
   Widget build(BuildContext context) {
@@ -597,161 +900,341 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.background,
-
-        // =====================================================================
-        // APP BAR
-        // =====================================================================
+        backgroundColor:
+            AppColors.background,
 
         appBar: LalBabaAppBar(
-          notificationCount: _notificationCount,
-
-          onNotificationTap: () {
-            // TODO: notification action
-          },
-
-          onCartTap: () {
-            // TODO: cart action
-          },
+          notificationCount:
+              _notificationCount,
+          onNotificationTap: () {},
+          onCartTap: () {},
         ),
 
-        // =====================================================================
-        // BODY
-        // =====================================================================
+        body: _isLoading
+            ? _buildShimmerBody()
+            : CustomScrollView(
+                physics:
+                    const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  // ===========================================================
+                  // GAP
+                  // ===========================================================
 
-        body: RefreshIndicator(
-          onRefresh: _handleRefresh,
-          color: AppColors.error,
-
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-
-            slivers: [
-              // =================================================================
-              // SEARCH
-              // =================================================================
-
-              const SliverToBoxAdapter(
-                child: SearchWidget(),
-              ),
-
-              // =================================================================
-              // STICKY CATEGORY
-              // =================================================================
-
-              SliverPersistentHeader(
-                pinned: true,
-
-                delegate: _StickyHeaderDelegate(
-                  height: categoryHeight,
-
-                  child: CategoryWidget(
-                    names: _categoryNames,
-
-                    onCategoryTap: (name) {
-                      _openProductListPage();
-                    },
-                  ),
-                ),
-              ),
-
-              // =================================================================
-              // HOME CONTENT
-              // =================================================================
-
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    bottom: 20,
+                  const SliverToBoxAdapter(
+                    child:
+                        SizedBox(height: 10),
                   ),
 
-                  child: Column(
-                    children: [
-                      // =========================================================
-                      // BANNER
-                      // =========================================================
+                  // ===========================================================
+                  // SEARCH
+                
+                  // ===========================================================
 
-                      const BannerWidget(),
+                  SliverToBoxAdapter(
+                    child: SearchWidget(
+                      categories:
+                          _searchCategories,
 
-                      // =========================================================
-                      // TRENDING THIS WEEK
-                      // =========================================================
+                      products:
+                          _searchProducts,
 
-                      SectionCardWidget(
-                        title: AppStrings.trendingThisWeek,
-                        products: _trendingProducts,
+                      onCategoryTap:
+                          _handleSearchCategoryTap,
 
-                        onProductTap: (product) {
-                          // TODO: product details
-                        },
+                      onProductTap:
+                          _handleSearchProductTap,
+                    ),
+                  ),
 
-                        onAddToCart: _handleAddToCart,
+                  // ===========================================================
+                  // HOME CATEGORY TABS
+              
+                  // ===========================================================
 
-                        onViewAllTap: () {
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate:
+                        _StickyHeaderDelegate(
+                      height:
+                          categoryHeight,
+                      child:
+                          CategoryWidget(
+                        names:
+                            _categoryNames,
+                        onCategoryTap:
+                            (name) {
                           _openProductListPage(
-                            sectionType: 'trending',
-                            title: 'Trending this week',
+                            title: name,
                           );
                         },
                       ),
-
-                      // =========================================================
-                      // POPULAR SEARCH
-                      // =========================================================
-
-                      PopularSearchWidget(
-                        products: _popularSearch,
-                      ),
-
-                      // =========================================================
-                      // BEST SELLER
-                      // =========================================================
-
-                      SectionCardWidget(
-                        title: AppStrings.bestSeller,
-                        products: _bestSellers,
-
-                        onProductTap: (product) {
-                          // TODO: product details
-                        },
-
-                        onAddToCart: _handleAddToCart,
-
-                        onViewAllTap: () {
-                          _openProductListPage(
-                            sectionType: 'bestSeller',
-                            title: 'All time Best seller',
-                          );
-                        },
-                      ),
-
-                      // =========================================================
-                      // RECIPE
-                      // =========================================================
-
-                      const RecipeWidget(),
-
-                      // =========================================================
-                      // TESTIMONIAL
-                      // =========================================================
-
-                      const TestimonialWidget(),
-                    ],
+                    ),
                   ),
-                ),
+
+                  // ===========================================================
+                  // HOME CONTENT
+                  // ===========================================================
+
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets
+                              .only(
+                        top: 8,
+                        bottom: 20,
+                      ),
+                      child: Column(
+                        children: [
+                          const BannerWidget(),
+
+                          // TRENDING
+                          SectionCardWidget(
+                            title: AppStrings
+                                .trendingThisWeek,
+                            products:
+                                _trendingProducts,
+                            onProductTap:
+                                (product) {},
+                            onAddToCart:
+                                _handleAddToCart,
+                            onViewAllTap:
+                                () {
+                              _openProductListPage(
+                                sectionType:
+                                    'trending',
+                                title:
+                                    'Trending this week',
+                              );
+                            },
+                          ),
+
+                          // POPULAR
+                          PopularSearchWidget(
+                            products:
+                                _popularSearch,
+                          ),
+
+                          // BEST SELLER
+                          SectionCardWidget(
+                            title: AppStrings
+                                .bestSeller,
+                            products:
+                                _bestSellers,
+                            onProductTap:
+                                (product) {},
+                            onAddToCart:
+                                _handleAddToCart,
+                            onViewAllTap:
+                                () {
+                              _openProductListPage(
+                                sectionType:
+                                    'bestSeller',
+                                title:
+                                    'All time Best seller',
+                              );
+                            },
+                          ),
+
+                          const RecipeWidget(),
+
+                          const TestimonialWidget(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+      ),
+    );
+  }
+
+  // ===========================================================================
+  // HOME SHIMMER
+  // ===========================================================================
+
+  Widget _buildShimmerBody() {
+    return ListView(
+      physics:
+          const AlwaysScrollableScrollPhysics(),
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 12,
+      ),
+      children: [
+        // SEARCH
+        const AppShimmer(
+          height: 48,
+          radius: 24,
+        ),
+
+        const SizedBox(height: 16),
+
+        // HOME CATEGORY
+        SizedBox(
+          height: 36,
+          child: ListView.separated(
+            scrollDirection:
+                Axis.horizontal,
+            physics:
+                const NeverScrollableScrollPhysics(),
+            itemCount:
+                _categoryNames.length,
+            separatorBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 10,
+              );
+            },
+            itemBuilder:
+                (context, index) {
+              return const AppShimmer(
+                width: 90,
+                height: 36,
+                radius: 20,
+              );
+            },
           ),
         ),
-      ),
+
+        const SizedBox(height: 16),
+
+        // BANNER
+        const AppShimmer(
+          height: 150,
+          radius: 12,
+        ),
+
+        const SizedBox(height: 20),
+
+        // TRENDING TITLE
+        const AppShimmer(
+          width: 160,
+          height: 18,
+          radius: 6,
+        ),
+
+        const SizedBox(height: 10),
+
+        // TRENDING PRODUCTS
+        SizedBox(
+          height: 260,
+          child: ListView.separated(
+            scrollDirection:
+                Axis.horizontal,
+            itemCount: 3,
+            separatorBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 10,
+              );
+            },
+            itemBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 150,
+                child:
+                    ProductShimmer(),
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // POPULAR TITLE
+        const AppShimmer(
+          width: 160,
+          height: 18,
+          radius: 6,
+        ),
+
+        const SizedBox(height: 10),
+
+        // POPULAR ITEMS
+        SizedBox(
+          height: 90,
+          child: ListView.separated(
+            scrollDirection:
+                Axis.horizontal,
+            itemCount: 2,
+            separatorBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 10,
+              );
+            },
+            itemBuilder:
+                (context, index) {
+              return const AppShimmer(
+                width: 140,
+                height: 90,
+                radius: 10,
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // BEST SELLER TITLE
+        const AppShimmer(
+          width: 160,
+          height: 18,
+          radius: 6,
+        ),
+
+        const SizedBox(height: 10),
+
+        // BEST SELLER PRODUCTS
+        SizedBox(
+          height: 260,
+          child: ListView.separated(
+            scrollDirection:
+                Axis.horizontal,
+            itemCount: 3,
+            separatorBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 10,
+              );
+            },
+            itemBuilder:
+                (context, index) {
+              return const SizedBox(
+                width: 150,
+                child:
+                    ProductShimmer(),
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // RECIPE
+        const AppShimmer(
+          height: 160,
+          radius: 12,
+        ),
+
+        const SizedBox(height: 20),
+
+        // TESTIMONIAL
+        const AppShimmer(
+          height: 120,
+          radius: 12,
+        ),
+
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
 
-// ==============================================================================
-// STICKY HEADER DELEGATE
-// ==============================================================================
+// =============================================================================
+// STICKY HEADER
+// =============================================================================
 
 class _StickyHeaderDelegate
     extends SliverPersistentHeaderDelegate {
@@ -777,23 +1260,22 @@ class _StickyHeaderDelegate
   ) {
     return Material(
       color: Colors.white,
-
-      elevation: overlapsContent ? 2 : 0,
-
-      shadowColor: Colors.black.withValues(
+      elevation:
+          overlapsContent ? 2 : 0,
+      shadowColor:
+          Colors.black.withValues(
         alpha: 0.08,
       ),
-
       child: child,
     );
   }
 
   @override
   bool shouldRebuild(
-    covariant _StickyHeaderDelegate oldDelegate,
+    covariant _StickyHeaderDelegate
+        oldDelegate,
   ) {
     return oldDelegate.height != height ||
         oldDelegate.child != child;
   }
 }
-

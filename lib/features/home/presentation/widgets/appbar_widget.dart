@@ -134,7 +134,7 @@ class LalBabaAppBar extends StatelessWidget
                     ) {
                       return const Icon(
                         Icons.rice_bowl_rounded,
-                        color: AppColors.error,
+                        color: AppColors.primary,
                         size: 27,
                       );
                     },
