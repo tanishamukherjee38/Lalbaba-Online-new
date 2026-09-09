@@ -54,7 +54,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteNames.bottomnavigation,
-      builder: (_, __) => const NavigationPage(),
+      builder: (_, __) => const BottomNavigationPage(),
     ),
     GoRoute(path: RouteNames.home, builder: (_, __) => const HomePage()),
     // GoRoute(path: RouteNames.cart, builder: (_, __) => const CartPage()),
@@ -63,10 +63,7 @@ final appRouter = GoRouter(
       builder: (_, __) => const CategoriesPage(),
     ),
     GoRoute(path: RouteNames.account, builder: (_, __) => const AccountPage()),
-    GoRoute(
-      path: RouteNames.orders,
-      builder: (_, __) => const MyOrdersPage(),
-    ),
+    GoRoute(path: RouteNames.orders, builder: (_, __) => const MyOrdersPage()),
 
     // ==========================================================
     // CHECKOUT

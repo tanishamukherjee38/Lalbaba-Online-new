@@ -87,6 +87,7 @@ class AppStrings {
   static String get cart => AppLanguageConstants.t('Cart', 'কার্ট');
   static String get myOrders =>
       AppLanguageConstants.t('My Orders', 'আমার অর্ডার');
+  static String get orders => AppLanguageConstants.t('Orders', 'অর্ডার');
 
   static String get notifications =>
       AppLanguageConstants.t('Notifications', 'নোটিফিকেশন');

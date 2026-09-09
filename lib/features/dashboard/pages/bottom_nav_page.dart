@@ -7,21 +7,21 @@ import '../../account/presentation/page/account_widget.dart';
 import '../../cart/presentation/pages/cart_page.dart';
 import '../../categories/presentation/pages/categories_page.dart';
 import '../../account/presentation/widgets/languange_constant.dart';
-import '../../order/presentation/pages/order_details_page.dart' hide AppColors;
 import '../../order/presentation/pages/orders_page.dart';
 import '../controller/bottom_nav_controller.dart';
 import '../widgets/bottom_nav_widget.dart';
 
 import '../../home/presentation/pages/home_page.dart';
 
-class NavigationPage extends ConsumerStatefulWidget {
-  const NavigationPage({super.key});
+class BottomNavigationPage extends ConsumerStatefulWidget {
+  const BottomNavigationPage({super.key});
 
   @override
-  ConsumerState<NavigationPage> createState() => _NavigationPageState();
+  ConsumerState<BottomNavigationPage> createState() =>
+      _BottomNavigationPageState();
 }
 
-class _NavigationPageState extends ConsumerState<NavigationPage> {
+class _BottomNavigationPageState extends ConsumerState<BottomNavigationPage> {
   // Order must match BottomNavWidget: 0 Home, 1 Categories, 2 Cart, 3 Notifications, 4 More
   static final List<Widget> _pages = [
     const HomePage(),
@@ -91,6 +91,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
             // further to do here either way.
           },
           child: Scaffold(
+            // extendBody: true,
             body: IndexedStack(index: selectedIndex, children: _pages),
             bottomNavigationBar: BottomNavWidget(
               currentIndex: selectedIndex,
