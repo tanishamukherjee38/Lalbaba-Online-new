@@ -8,6 +8,7 @@ import '../../cart/presentation/pages/cart_page.dart';
 import '../../categories/presentation/pages/categories_page.dart';
 import '../../account/presentation/widgets/languange_constant.dart';
 import '../../order/presentation/pages/order_details_page.dart' hide AppColors;
+import '../../order/presentation/pages/orders_page.dart';
 import '../controller/bottom_nav_controller.dart';
 import '../widgets/bottom_nav_widget.dart';
 
@@ -26,7 +27,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage> {
     const HomePage(),
     const CategoriesPage(),
     const CartPage(),
-    const OrderDetailsPage(),
+    const MyOrdersPage(),
     const AccountPage(),
   ];
 
