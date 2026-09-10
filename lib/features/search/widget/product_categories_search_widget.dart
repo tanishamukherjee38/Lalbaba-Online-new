@@ -374,7 +374,6 @@ class _SearchWidgetState extends State<SearchWidget> {
 
           // ===================================================================
           // SEARCH SUGGESTIONS
-          // শুধু কিছু type করলে show হবে
           // ===================================================================
 
           if (_showSuggestions && hasText) ...[

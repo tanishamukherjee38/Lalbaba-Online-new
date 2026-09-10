@@ -1,13 +1,14 @@
 
 
 // import 'package:flutter/material.dart';
+// import '../../../../app/theme/app_colors.dart';
 // import '../../../../core/widgets/app_app_bar.dart';
 // import '../../../home/presentation/widgets/appbar_widget.dart';
 // import '../widgets/fliter_drawer_widget.dart';
 // import '../widgets/product_name_image.dart';
 // import '../widgets/product_price_deliver_weight.dart';
 // import '../widgets/qty_add_button_widget.dart';
-
+// import '../../../../core/widgets/app_shimmer.dart';
 
 // class ProductListPage extends StatefulWidget {
 //   final int initialCartCount;
@@ -43,6 +44,8 @@
 //   String _selectedSort = 'Default';
 
 //   late List<ProductItem> _filteredProducts;
+
+//   bool _isLoading = true;
 
 //   // ===========================================================================
 //   // PRODUCTS
@@ -161,6 +164,27 @@
 //     if (CartCountManager.currentCount < widget.initialCartCount) {
 //       CartCountManager.setCount(widget.initialCartCount);
 //     }
+
+//     Future.delayed(const Duration(milliseconds: 800), () {
+//       if (mounted) {
+//         setState(() {
+//           _isLoading = false;
+//         });
+//       }
+//     });
+//   }
+
+//   // ===========================================================================
+//   // RESPONSIVE GRID COLUMN
+//   // ===========================================================================
+
+//   int _getCrossAxisCount(double width) {
+//     // Very small phone / split screen
+//     if (width < 330) {
+//       return 1;
+//     }
+
+//     return 2;
 //   }
 
 //   // ===========================================================================
@@ -176,6 +200,7 @@
 //         widget.sectionType == 'bestSeller') {
 //       return products.where((product) {
 //         final name = product.name.toLowerCase();
+
 //         return name.contains('minikit') ||
 //             name.contains('basmati') ||
 //             name.contains('jeera');
@@ -198,7 +223,9 @@
 
 //     CartCountManager.add(quantity);
 
-//     widget.onCartCountChanged?.call(CartCountManager.currentCount);
+//     widget.onCartCountChanged?.call(
+//       CartCountManager.currentCount,
+//     );
 
 //     ScaffoldMessenger.of(context).showSnackBar(
 //       SnackBar(
@@ -213,7 +240,10 @@
 //   // ===========================================================================
 
 //   void _goBack() {
-//     Navigator.pop(context, CartCountManager.currentCount);
+//     Navigator.pop(
+//       context,
+//       CartCountManager.currentCount,
+//     );
 //   }
 
 //   // ===========================================================================
@@ -240,42 +270,98 @@
 //           children: [
 //             _buildProductHeader(),
 //             Expanded(
-//               child: _filteredProducts.isEmpty
-//                   ? _buildEmptyResult()
-//                   : GridView.builder(
-//                       padding: const EdgeInsets.only(
-//                         left: 7,
-//                         right: 7,
-//                         top: 8,
-//                         bottom: 15,
-//                       ),
-//                       gridDelegate:
-//                           const SliverGridDelegateWithFixedCrossAxisCount(
-//                         crossAxisCount: 2,
-//                         crossAxisSpacing: 7,
-//                         mainAxisSpacing: 8,
-//                         mainAxisExtent: 385,
-//                       ),
-//                       itemCount: _filteredProducts.length,
-//                       itemBuilder: (context, index) {
-//                         final product = _filteredProducts[index];
-
-//                         return ProductCard(
-//                           key: ValueKey(product.name),
-//                           product: product,
-//                           onWeightTap: () {
-//                             _showWeightSheet(product);
-//                           },
-//                           onAddToCart: (quantity) {
-//                             _addToCart(product, quantity);
-//                           },
-//                         );
-//                       },
-//                     ),
+//               child: _isLoading
+//                   ? _buildShimmerGrid()
+//                   : _filteredProducts.isEmpty
+//                       ? _buildEmptyResult()
+//                       : _buildProductGrid(),
 //             ),
 //           ],
 //         ),
 //       ),
+//     );
+//   }
+
+//   // ===========================================================================
+//   // RESPONSIVE PRODUCT GRID
+//   // ===========================================================================
+
+//   Widget _buildProductGrid() {
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         final crossAxisCount =
+//             _getCrossAxisCount(constraints.maxWidth);
+
+//         return GridView.builder(
+//           padding: const EdgeInsets.only(
+//             left: 7,
+//             right: 7,
+//             top: 8,
+//             bottom: 15,
+//           ),
+//           gridDelegate:
+//               SliverGridDelegateWithFixedCrossAxisCount(
+//             crossAxisCount: crossAxisCount,
+//             crossAxisSpacing: 7,
+//             mainAxisSpacing: 8,
+
+//             // Card-er sob content safely dhorar jonno.
+//             mainAxisExtent: 385,
+//           ),
+//           itemCount: _filteredProducts.length,
+//           itemBuilder: (context, index) {
+//             final product =
+//                 _filteredProducts[index];
+
+//             return ProductCard(
+//               key: ValueKey(product.name),
+//               product: product,
+//               onWeightTap: () {
+//                 _showWeightSheet(product);
+//               },
+//               onAddToCart: (quantity) {
+//                 _addToCart(
+//                   product,
+//                   quantity,
+//                 );
+//               },
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
+
+//   // ===========================================================================
+//   // SHIMMER GRID
+//   // ===========================================================================
+
+//   Widget _buildShimmerGrid() {
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         final crossAxisCount =
+//             _getCrossAxisCount(constraints.maxWidth);
+
+//         return GridView.builder(
+//           padding: const EdgeInsets.only(
+//             left: 7,
+//             right: 7,
+//             top: 8,
+//             bottom: 15,
+//           ),
+//           gridDelegate:
+//               SliverGridDelegateWithFixedCrossAxisCount(
+//             crossAxisCount: crossAxisCount,
+//             crossAxisSpacing: 7,
+//             mainAxisSpacing: 8,
+//             mainAxisExtent: 385,
+//           ),
+//           itemCount: 6,
+//           itemBuilder: (context, index) {
+//             return const ProductShimmer();
+//           },
+//         );
+//       },
 //     );
 //   }
 
@@ -285,30 +371,49 @@
 
 //   Widget _buildEmptyResult() {
 //     return Center(
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           const Icon(Icons.search_off, size: 60, color: Colors.grey),
-//           const SizedBox(height: 12),
-//           const Text(
-//             'No products found',
-//             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-//           ),
-//           const SizedBox(height: 6),
-//           const Text(
-//             'Try changing your filter options.',
-//             style: TextStyle(color: Colors.grey),
-//           ),
-//           const SizedBox(height: 16),
-//           ElevatedButton(
-//             onPressed: _clearFilters,
-//             style: ElevatedButton.styleFrom(
-//               backgroundColor: const Color(0xFFE23F1C),
-//               foregroundColor: Colors.white,
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 20,
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             const Icon(
+//               Icons.search_off,
+//               size: 60,
+//               color: Colors.grey,
 //             ),
-//             child: const Text('CLEAR FILTER'),
-//           ),
-//         ],
+//             const SizedBox(height: 12),
+//             const Text(
+//               'No products found',
+//               textAlign: TextAlign.center,
+//               style: TextStyle(
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w600,
+//               ),
+//             ),
+//             const SizedBox(height: 6),
+//             const Text(
+//               'Try changing your filter options.',
+//               textAlign: TextAlign.center,
+//               style: TextStyle(
+//                 color: Colors.grey,
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             ElevatedButton(
+//               onPressed: _clearFilters,
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor:
+//                     const Color(0xFFE23F1C),
+//                 foregroundColor: Colors.white,
+//               ),
+//               child: const Text(
+//                 'CLEAR FILTER',
+//               ),
+//             ),
+//           ],
+//         ),
 //       ),
 //     );
 //   }
@@ -318,98 +423,235 @@
 //   // ===========================================================================
 
 //   Widget _buildProductHeader() {
-//     final filterCount = _selectedCategories.length + _selectedWeights.length;
+//     final filterCount =
+//         _selectedCategories.length +
+//             _selectedWeights.length;
 
-//     final bool hasFilter = _selectedCategories.isNotEmpty ||
-//         _selectedWeights.isNotEmpty ||
-//         _priceRange.start != 119 ||
-//         _priceRange.end != 1649;
+//     final bool hasFilter =
+//         _selectedCategories.isNotEmpty ||
+//             _selectedWeights.isNotEmpty ||
+//             _priceRange.start != 119 ||
+//             _priceRange.end != 1649;
 
-//     return Container(
-//       height: 55,
-//       decoration: const BoxDecoration(
-//         color: Colors.white,
-//         border: Border(
-//           top: BorderSide(color: Color(0xffeeeeee)),
-//           bottom: BorderSide(color: Color(0xffeeeeee)),
-//         ),
-//       ),
-//       child: Row(
-//         children: [
-//           Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.only(left: 14),
-//               child: Text(
-//                 hasFilter
-//                     ? 'Filtered products (${_filteredProducts.length})'
-//                     : '${widget.pageTitle} (${_filteredProducts.length})',
-//                 style: const TextStyle(
-//                   fontSize: 14,
-//                   fontWeight: FontWeight.w600,
+//     final String title = _isLoading
+//         ? widget.pageTitle
+//         : hasFilter
+//             ? 'Filtered products (${_filteredProducts.length})'
+//             : '${widget.pageTitle} (${_filteredProducts.length})';
+
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         final bool smallScreen =
+//             constraints.maxWidth < 360;
+
+//         // =====================================================
+//         // SMALL PHONE HEADER
+//         // =====================================================
+
+//         if (smallScreen) {
+//           return Container(
+//             width: double.infinity,
+//             padding: const EdgeInsets.fromLTRB(
+//               12,
+//               8,
+//               8,
+//               8,
+//             ),
+//             decoration: const BoxDecoration(
+//               color: Colors.white,
+//               border: Border(
+//                 top: BorderSide(
+//                   color: Color(0xffeeeeee),
+//                 ),
+//                 bottom: BorderSide(
+//                   color: Color(0xffeeeeee),
 //                 ),
 //               ),
 //             ),
-//           ),
-
-//           // SORT
-//           GestureDetector(
-//             onTap: _showSortSheet,
-//             child: const Padding(
-//               padding: EdgeInsets.symmetric(horizontal: 10),
-//               child: Row(
-//                 children: [
-//                   Icon(Icons.sort, size: 19),
-//                   SizedBox(width: 4),
-//                   Text('Sort By', style: TextStyle(fontSize: 13)),
-//                 ],
-//               ),
-//             ),
-//           ),
-
-//           // FILTER
-//           GestureDetector(
-//             onTap: _openFilter,
-//             child: Container(
-//               margin: const EdgeInsets.only(right: 8),
-//               padding: const EdgeInsets.symmetric(
-//                 horizontal: 9,
-//                 vertical: 6,
-//               ),
-//               decoration: BoxDecoration(
-//                 border: Border.all(color: Colors.grey.shade400),
-//                 borderRadius: BorderRadius.circular(5),
-//               ),
-//               child: Row(
-//                 children: [
-//                   const Icon(Icons.filter_list, size: 18),
-//                   const SizedBox(width: 3),
-//                   const Text('Filter', style: TextStyle(fontSize: 13)),
-//                   if (filterCount > 0) ...[
-//                     const SizedBox(width: 4),
-//                     Container(
-//                       padding: const EdgeInsets.symmetric(
-//                         horizontal: 5,
-//                         vertical: 2,
-//                       ),
-//                       decoration: const BoxDecoration(
-//                         color: Color(0xFFE23F1C),
-//                         shape: BoxShape.circle,
-//                       ),
-//                       child: Text(
-//                         '$filterCount',
-//                         style: const TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 10,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
+//             child: Column(
+//               crossAxisAlignment:
+//                   CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   maxLines: 1,
+//                   overflow:
+//                       TextOverflow.ellipsis,
+//                   style: const TextStyle(
+//                     fontSize: 14,
+//                     fontWeight:
+//                         FontWeight.w600,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 7),
+//                 Row(
+//                   children: [
+//                     const Spacer(),
+//                     _buildSortButton(),
+//                     const SizedBox(width: 6),
+//                     _buildFilterButton(
+//                       filterCount,
 //                     ),
 //                   ],
-//                 ],
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
+
+//         // =====================================================
+//         // NORMAL PHONE HEADER
+//         // =====================================================
+
+//         return Container(
+//           constraints: const BoxConstraints(
+//             minHeight: 55,
+//           ),
+//           decoration: const BoxDecoration(
+//             color: Colors.white,
+//             border: Border(
+//               top: BorderSide(
+//                 color: Color(0xffeeeeee),
+//               ),
+//               bottom: BorderSide(
+//                 color: Color(0xffeeeeee),
 //               ),
 //             ),
 //           ),
-//         ],
+//           child: Row(
+//             children: [
+//               Expanded(
+//                 child: Padding(
+//                   padding:
+//                       const EdgeInsets.only(
+//                     left: 14,
+//                     right: 5,
+//                   ),
+//                   child: Text(
+//                     title,
+//                     maxLines: 2,
+//                     overflow:
+//                         TextOverflow.ellipsis,
+//                     style: const TextStyle(
+//                       fontSize: 14,
+//                       fontWeight:
+//                           FontWeight.w600,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               _buildSortButton(),
+//               _buildFilterButton(
+//                 filterCount,
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildSortButton() {
+//     return InkWell(
+//       onTap:
+//           _isLoading ? null : _showSortSheet,
+//       borderRadius:
+//           BorderRadius.circular(5),
+//       child: const Padding(
+//         padding: EdgeInsets.symmetric(
+//           horizontal: 8,
+//           vertical: 8,
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Icon(
+//               Icons.sort,
+//               size: 18,
+//             ),
+//             SizedBox(width: 4),
+//             Text(
+//               'Sort By',
+//               style: TextStyle(
+//                 fontSize: 13,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildFilterButton(
+//     int filterCount,
+//   ) {
+//     return InkWell(
+//       onTap: _isLoading ? null : _openFilter,
+//       borderRadius:
+//           BorderRadius.circular(5),
+//       child: Container(
+//         margin:
+//             const EdgeInsets.only(right: 8),
+//         padding:
+//             const EdgeInsets.symmetric(
+//           horizontal: 8,
+//           vertical: 6,
+//         ),
+//         decoration: BoxDecoration(
+//           border: Border.all(
+//             color: Colors.grey.shade400,
+//           ),
+//           borderRadius:
+//               BorderRadius.circular(5),
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             const Icon(
+//               Icons.filter_list,
+//               size: 18,
+//             ),
+//             const SizedBox(width: 3),
+//             const Text(
+//               'Filter',
+//               style: TextStyle(
+//                 fontSize: 13,
+//               ),
+//             ),
+//             if (filterCount > 0) ...[
+//               const SizedBox(width: 4),
+//               Container(
+//                 constraints:
+//                     const BoxConstraints(
+//                   minWidth: 18,
+//                   minHeight: 18,
+//                 ),
+//                 alignment:
+//                     Alignment.center,
+//                 padding:
+//                     const EdgeInsets.symmetric(
+//                   horizontal: 4,
+//                 ),
+//                 decoration:
+//                     const BoxDecoration(
+//                   color:
+//                       AppColors.primary,
+//                   shape: BoxShape.circle,
+//                 ),
+//                 child: Text(
+//                   '$filterCount',
+//                   style:
+//                       const TextStyle(
+//                     color: Colors.white,
+//                     fontSize: 9,
+//                     fontWeight:
+//                         FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ],
+//         ),
 //       ),
 //     );
 //   }
@@ -418,67 +660,111 @@
 //   // WEIGHT SHEET
 //   // ===========================================================================
 
-//   void _showWeightSheet(ProductItem product) {
+//   void _showWeightSheet(
+//     ProductItem product,
+//   ) {
 //     showModalBottomSheet(
 //       context: context,
-//       backgroundColor: const Color(0xfffafafa),
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+//       backgroundColor:
+//           const Color(0xfffafafa),
+//       isScrollControlled: true,
+//       shape:
+//           const RoundedRectangleBorder(
+//         borderRadius:
+//             BorderRadius.vertical(
+//           top: Radius.circular(20),
+//         ),
 //       ),
 //       builder: (context) {
 //         return SafeArea(
-//           child: Padding(
-//             padding: const EdgeInsets.all(18),
-//             child: Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: [
-//                 Text(
-//                   product.name,
-//                   style: const TextStyle(
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold,
+//           child: SingleChildScrollView(
+//             child: Padding(
+//               padding:
+//                   const EdgeInsets.all(18),
+//               child: Column(
+//                 mainAxisSize:
+//                     MainAxisSize.min,
+//                 children: [
+//                   Text(
+//                     product.name,
+//                     textAlign:
+//                         TextAlign.center,
+//                     style:
+//                         const TextStyle(
+//                       fontSize: 17,
+//                       fontWeight:
+//                           FontWeight.bold,
+//                     ),
 //                   ),
-//                 ),
-//                 const SizedBox(height: 14),
-//                 ...List.generate(product.variants.length, (index) {
-//                   final item = product.variants[index];
-//                   final selected = product.selectedVariant == index;
+//                   const SizedBox(
+//                     height: 14,
+//                   ),
+//                   ...List.generate(
+//                     product.variants.length,
+//                     (index) {
+//                       final item =
+//                           product
+//                               .variants[index];
 
-//                   return ListTile(
-//                     onTap: () {
-//                       setState(() {
-//                         product.selectedVariant = index;
-//                       });
-//                       Navigator.pop(context);
-//                     },
-//                     leading: Container(
-//                       width: 22,
-//                       height: 22,
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         border: Border.all(
-//                           color: selected
-//                               ? const Color(0xFFE23F1C)
-//                               : Colors.grey,
-//                           width: 2,
+//                       final selected =
+//                           product
+//                                   .selectedVariant ==
+//                               index;
+
+//                       return ListTile(
+//                         contentPadding:
+//                             EdgeInsets.zero,
+//                         onTap: () {
+//                           setState(() {
+//                             product.selectedVariant =
+//                                 index;
+//                           });
+
+//                           Navigator.pop(
+//                             context,
+//                           );
+//                         },
+//                         leading: Container(
+//                           width: 22,
+//                           height: 22,
+//                           decoration:
+//                               BoxDecoration(
+//                             shape:
+//                                 BoxShape.circle,
+//                             border:
+//                                 Border.all(
+//                               color: selected
+//                                   ? const Color(
+//                                       0xFFE23F1C,
+//                                     )
+//                                   : Colors.grey,
+//                               width: 2,
+//                             ),
+//                           ),
+//                           child: selected
+//                               ? const Center(
+//                                   child:
+//                                       CircleAvatar(
+//                                     radius: 6,
+//                                     backgroundColor:
+//                                         Color(
+//                                       0xFFE23F1C,
+//                                     ),
+//                                   ),
+//                                 )
+//                               : null,
 //                         ),
-//                       ),
-//                       child: selected
-//                           ? const Center(
-//                               child: CircleAvatar(
-//                                 radius: 6,
-//                                 backgroundColor: Color(0xFFE23F1C),
-//                               ),
-//                             )
-//                           : null,
-//                     ),
-//                     title: Text(
-//                       '${item.weight} - Rs ${item.price.toStringAsFixed(2)}',
-//                     ),
-//                   );
-//                 }),
-//                 const SizedBox(height: 10),
-//               ],
+//                         title: Text(
+//                           '${item.weight} - Rs ${item.price.toStringAsFixed(2)}',
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                   const SizedBox(
+//                     height: 10,
+//                   ),
+//                 ],
+//               ),
 //             ),
 //           ),
 //         );
@@ -501,26 +787,44 @@
 //     showModalBottomSheet(
 //       context: context,
 //       backgroundColor: Colors.white,
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+//       shape:
+//           const RoundedRectangleBorder(
+//         borderRadius:
+//             BorderRadius.vertical(
+//           top: Radius.circular(20),
+//         ),
 //       ),
 //       builder: (context) {
 //         return SafeArea(
 //           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: options.map((option) {
-//               final selected = _selectedSort == option;
+//             mainAxisSize:
+//                 MainAxisSize.min,
+//             children:
+//                 options.map((option) {
+//               final selected =
+//                   _selectedSort ==
+//                       option;
 
 //               return ListTile(
 //                 title: Text(option),
 //                 trailing: selected
-//                     ? const Icon(Icons.check, color: Color(0xFFE23F1C))
+//                     ? const Icon(
+//                         Icons.check,
+//                         color: Color(
+//                           0xFFE23F1C,
+//                         ),
+//                       )
 //                     : null,
 //                 onTap: () {
-//                   Navigator.pop(context);
+//                   Navigator.pop(
+//                     context,
+//                   );
+
 //                   setState(() {
-//                     _selectedSort = option;
+//                     _selectedSort =
+//                         option;
 //                   });
+
 //                   _applyFilters();
 //                 },
 //               );
@@ -536,47 +840,66 @@
 //   // ===========================================================================
 
 //   void _applyFilters() {
-//     // IMPORTANT: Start from current section products, NOT from all products.
-//     List<ProductItem> result = _getSectionProducts();
+//     List<ProductItem> result =
+//         _getSectionProducts();
 
 //     // CATEGORY
 //     if (_selectedCategories.isNotEmpty) {
 //       result = result.where((product) {
 //         return _selectedCategories.any(
-//           (category) => _productMatchesCategory(product, category),
+//           (category) =>
+//               _productMatchesCategory(
+//             product,
+//             category,
+//           ),
 //         );
 //       }).toList();
 //     }
 
 //     // PRICE + WEIGHT
 //     result = result.where((product) {
-//       return product.variants.any((variant) {
-//         final priceMatches = variant.price >= _priceRange.start &&
-//             variant.price <= _priceRange.end;
+//       return product.variants.any(
+//         (variant) {
+//           final priceMatches =
+//               variant.price >=
+//                       _priceRange.start &&
+//                   variant.price <=
+//                       _priceRange.end;
 
-//         final weightMatches = _selectedWeights.isEmpty ||
-//             _selectedWeights.contains(variant.weight);
+//           final weightMatches =
+//               _selectedWeights.isEmpty ||
+//                   _selectedWeights
+//                       .contains(
+//                     variant.weight,
+//                   );
 
-//         return priceMatches && weightMatches;
-//       });
+//           return priceMatches &&
+//               weightMatches;
+//         },
+//       );
 //     }).toList();
 
 //     // SORT
 //     switch (_selectedSort) {
 //       case 'Price Low→High':
 //         result.sort(
-//           (a, b) => _lowestPrice(a).compareTo(_lowestPrice(b)),
+//           (a, b) => _lowestPrice(a)
+//               .compareTo(
+//             _lowestPrice(b),
+//           ),
 //         );
 //         break;
 
 //       case 'Price High→Low':
 //         result.sort(
-//           (a, b) => _lowestPrice(b).compareTo(_lowestPrice(a)),
+//           (a, b) => _lowestPrice(b)
+//               .compareTo(
+//             _lowestPrice(a),
+//           ),
 //         );
 //         break;
 
 //       case 'Newest':
-//         // No createdAt field available.
 //         break;
 
 //       case 'Default':
@@ -592,22 +915,40 @@
 //   // CATEGORY MATCH
 //   // ===========================================================================
 
-//   bool _productMatchesCategory(ProductItem product, String category) {
-//     final name = product.name.toLowerCase();
+//   bool _productMatchesCategory(
+//     ProductItem product,
+//     String category,
+//   ) {
+//     final name =
+//         product.name.toLowerCase();
 
 //     switch (category.toLowerCase()) {
 //       case 'minikit':
 //         return name.contains('minikit');
+
 //       case 'banskathi':
-//         return name.contains('banskathi');
+//         return name.contains(
+//           'banskathi',
+//         );
+
 //       case 'ratna':
 //         return name.contains('ratna');
+
 //       case 'gobindo bhog':
-//         return name.contains('gobindo bhog');
+//         return name.contains(
+//           'gobindo bhog',
+//         );
+
 //       case 'basmati':
-//         return name.contains('basmati');
+//         return name.contains(
+//           'basmati',
+//         );
+
 //       case 'jeera kathi':
-//         return name.contains('jeera kathi');
+//         return name.contains(
+//           'jeera kathi',
+//         );
+
 //       default:
 //         return false;
 //     }
@@ -617,14 +958,22 @@
 //   // LOWEST PRICE
 //   // ===========================================================================
 
-//   double _lowestPrice(ProductItem product) {
+//   double _lowestPrice(
+//     ProductItem product,
+//   ) {
 //     if (product.variants.isEmpty) {
 //       return double.infinity;
 //     }
 
 //     return product.variants
-//         .map((variant) => variant.price)
-//         .reduce((a, b) => a < b ? a : b);
+//         .map(
+//           (variant) =>
+//               variant.price,
+//         )
+//         .reduce(
+//           (a, b) =>
+//               a < b ? a : b,
+//         );
 //   }
 
 //   // ===========================================================================
@@ -633,13 +982,19 @@
 
 //   void _clearFilters() {
 //     setState(() {
-//       _priceRange = const RangeValues(119, 1649);
+//       _priceRange =
+//           const RangeValues(
+//         119,
+//         1649,
+//       );
+
 //       _selectedCategories.clear();
 //       _selectedWeights.clear();
+
 //       _selectedSort = 'Default';
 
-//       // IMPORTANT: Clear filter করলে current section-এই ফিরে যাবে.
-//       _filteredProducts = _getSectionProducts();
+//       _filteredProducts =
+//           _getSectionProducts();
 //     });
 //   }
 
@@ -648,18 +1003,31 @@
 //   // ===========================================================================
 
 //   Future<void> _openFilter() async {
-//     final result = await showGeneralDialog<FilterResult>(
+//     final result =
+//         await showGeneralDialog<
+//             FilterResult>(
 //       context: context,
 //       barrierDismissible: true,
 //       barrierLabel: 'Filter',
-//       transitionDuration: const Duration(milliseconds: 250),
-//       pageBuilder: (context, animation, secondaryAnimation) {
+//       transitionDuration:
+//           const Duration(
+//         milliseconds: 250,
+//       ),
+//       pageBuilder: (
+//         context,
+//         animation,
+//         secondaryAnimation,
+//       ) {
 //         return Align(
-//           alignment: Alignment.centerRight,
+//           alignment:
+//               Alignment.centerRight,
 //           child: FilterDrawer(
-//             initialPriceRange: _priceRange,
-//             initialCategories: _selectedCategories,
-//             initialWeights: _selectedWeights,
+//             initialPriceRange:
+//                 _priceRange,
+//             initialCategories:
+//                 _selectedCategories,
+//             initialWeights:
+//                 _selectedWeights,
 //           ),
 //         );
 //       },
@@ -670,15 +1038,20 @@
 //     }
 
 //     setState(() {
-//       _priceRange = result.priceRange;
+//       _priceRange =
+//           result.priceRange;
 
 //       _selectedCategories
 //         ..clear()
-//         ..addAll(result.categories);
+//         ..addAll(
+//           result.categories,
+//         );
 
 //       _selectedWeights
 //         ..clear()
-//         ..addAll(result.weights);
+//         ..addAll(
+//           result.weights,
+//         );
 //     });
 
 //     _applyFilters();
@@ -689,7 +1062,8 @@
 // // PRODUCT CARD
 // // ==============================================================================
 
-// class ProductCard extends StatelessWidget {
+// class ProductCard
+//     extends StatelessWidget {
 //   final ProductItem product;
 //   final VoidCallback onWeightTap;
 //   final ValueChanged<int> onAddToCart;
@@ -703,26 +1077,37 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final selectedVariant = product.variants[product.selectedVariant];
+//     final selectedVariant =
+//         product.variants[
+//             product.selectedVariant];
 
 //     return Container(
+//       clipBehavior: Clip.antiAlias,
 //       decoration: BoxDecoration(
 //         color: Colors.white,
-//         borderRadius: BorderRadius.circular(5),
-//         border: Border.all(color: const Color(0xffeeeeee)),
+//         borderRadius:
+//             BorderRadius.circular(5),
+//         border: Border.all(
+//           color:
+//               const Color(0xffeeeeee),
+//         ),
 //         boxShadow: [
 //           BoxShadow(
-//             color: Colors.black.withValues(alpha: 0.04),
+//             color: Colors.black
+//                 .withValues(
+//               alpha: 0.04,
+//             ),
 //             blurRadius: 5,
-//             offset: const Offset(0, 2),
+//             offset:
+//                 const Offset(0, 2),
 //           ),
 //         ],
 //       ),
 //       child: Column(
 //         children: [
-//           // IMAGE + NAME (now extracted widget)
 //           ProductImageHeader(
-//             imageUrl: product.imageUrl,
+//             imageUrl:
+//                 product.imageUrl,
 //             name: product.name,
 //           ),
 
@@ -730,32 +1115,60 @@
 //           SizedBox(
 //             height: 25,
 //             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: List.generate(5, (index) {
-//                 final rating = product.rating;
+//               mainAxisAlignment:
+//                   MainAxisAlignment.center,
+//               children:
+//                   List.generate(
+//                 5,
+//                 (index) {
+//                   final rating =
+//                       product.rating;
 
-//                 if (rating >= index + 1) {
-//                   return const Icon(Icons.star, size: 15, color: Colors.orange);
-//                 }
-//                 if (rating >= index + 0.5) {
-//                   return const Icon(Icons.star_half, size: 15, color: Colors.orange);
-//                 }
-//                 return const Icon(Icons.star_border, size: 15, color: Colors.orange);
-//               }),
+//                   if (rating >=
+//                       index + 1) {
+//                     return const Icon(
+//                       Icons.star,
+//                       size: 15,
+//                       color:
+//                           Colors.orange,
+//                     );
+//                   }
+
+//                   if (rating >=
+//                       index + 0.5) {
+//                     return const Icon(
+//                       Icons.star_half,
+//                       size: 15,
+//                       color:
+//                           Colors.orange,
+//                     );
+//                   }
+
+//                   return const Icon(
+//                     Icons.star_border,
+//                     size: 15,
+//                     color:
+//                         Colors.orange,
+//                   );
+//                 },
+//               ),
 //             ),
 //           ),
 
-//           // WEIGHT + PRICE + DELIVERY
 //           ProductPriceInfo(
-//             weight: selectedVariant.weight,
-//             price: selectedVariant.price,
-//             deliveryDays: product.deliveryDays,
-//             onWeightTap: onWeightTap,
+//             weight:
+//                 selectedVariant.weight,
+//             price:
+//                 selectedVariant.price,
+//             deliveryDays:
+//                 product.deliveryDays,
+//             onWeightTap:
+//                 onWeightTap,
 //           ),
 
-//           // QUANTITY + ADD
 //           QtyAddButton(
-//             onAddToCart: onAddToCart,
+//             onAddToCart:
+//                 onAddToCart,
 //           ),
 //         ],
 //       ),
@@ -772,7 +1185,9 @@
 //   final String imageUrl;
 //   final double rating;
 //   final int deliveryDays;
-//   final List<ProductVariant> variants;
+//   final List<ProductVariant>
+//       variants;
+
 //   int selectedVariant;
 
 //   ProductItem({
@@ -800,18 +1215,18 @@
 // }
 
 import 'package:flutter/material.dart';
+
+import '../../../../app/theme/app_colors.dart';
+import '../../../../core/services/cart_service.dart';
 import '../../../../core/widgets/app_app_bar.dart';
-import '../../../home/presentation/widgets/appbar_widget.dart';
+import '../../../../core/widgets/app_shimmer.dart';
+
 import '../widgets/fliter_drawer_widget.dart';
 import '../widgets/product_name_image.dart';
 import '../widgets/product_price_deliver_weight.dart';
 import '../widgets/qty_add_button_widget.dart';
-import '../../../../core/widgets/app_shimmer.dart'; // adjust path অনুযায়ী
 
 class ProductListPage extends StatefulWidget {
-  final int initialCartCount;
-  final ValueChanged<int>? onCartCountChanged;
-
   // null       = all products
   // trending   = trending products
   // bestSeller = best seller products
@@ -821,20 +1236,19 @@ class ProductListPage extends StatefulWidget {
 
   const ProductListPage({
     super.key,
-    this.initialCartCount = 0,
-    this.onCartCountChanged,
     this.sectionType,
     this.pageTitle = 'Products',
   });
 
   @override
-  State<ProductListPage> createState() => _ProductListPageState();
+  State<ProductListPage> createState() =>
+      _ProductListPageState();
 }
 
-class _ProductListPageState extends State<ProductListPage> {
-  late int cartCount;
-
-  RangeValues _priceRange = const RangeValues(119, 1649);
+class _ProductListPageState
+    extends State<ProductListPage> {
+  RangeValues _priceRange =
+      const RangeValues(119, 1649);
 
   final Set<String> _selectedCategories = {};
   final Set<String> _selectedWeights = {};
@@ -843,7 +1257,6 @@ class _ProductListPageState extends State<ProductListPage> {
 
   late List<ProductItem> _filteredProducts;
 
-  // PAGE LOADING STATE
   bool _isLoading = true;
 
   // ===========================================================================
@@ -858,11 +1271,21 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 5,
       deliveryDays: 3,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 139),
-        ProductVariant(weight: '5 Kg', price: 669),
-        ProductVariant(weight: '10 Kg', price: 1329),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 139,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 669,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1329,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Gobindo Bhog',
       imageUrl:
@@ -870,11 +1293,21 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 4.5,
       deliveryDays: 7,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 269),
-        ProductVariant(weight: '5 Kg', price: 1299),
-        ProductVariant(weight: '10 Kg', price: 2499),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 269,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 1299,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 2499,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Exclusive Basmati',
       imageUrl:
@@ -882,23 +1315,44 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 5,
       deliveryDays: 4,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 119),
-        ProductVariant(weight: '5 Kg', price: 569),
-        ProductVariant(weight: '10 Kg', price: 1129),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 119,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 569,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1129,
+        ),
       ],
     ),
+
     ProductItem(
-      name: 'Lalbaba Traditional Basmati Rice',
+      name:
+          'Lalbaba Traditional Basmati Rice',
       imageUrl:
           'https://lalbabaonline.com/public/uploads/all/jfCxsG3mPdSQSo4clKBd2dFNqTFr4af2fEZx2wkW.webp',
       rating: 4.5,
       deliveryDays: 5,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 199),
-        ProductVariant(weight: '5 Kg', price: 949),
-        ProductVariant(weight: '10 Kg', price: 1849),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 199,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 949,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1849,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Ratna Rice',
       imageUrl:
@@ -906,11 +1360,21 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 4.5,
       deliveryDays: 4,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 129),
-        ProductVariant(weight: '5 Kg', price: 619),
-        ProductVariant(weight: '10 Kg', price: 1219),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 129,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 619,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1219,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Jeera Kathi',
       imageUrl:
@@ -918,11 +1382,21 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 4.5,
       deliveryDays: 6,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 159),
-        ProductVariant(weight: '5 Kg', price: 759),
-        ProductVariant(weight: '10 Kg', price: 1499),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 159,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 759,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1499,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Premium Rice',
       imageUrl:
@@ -930,11 +1404,21 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 4.5,
       deliveryDays: 4,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 149),
-        ProductVariant(weight: '5 Kg', price: 699),
-        ProductVariant(weight: '10 Kg', price: 1379),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 149,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 699,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1379,
+        ),
       ],
     ),
+
     ProductItem(
       name: 'Lalbaba Special Rice',
       imageUrl:
@@ -942,9 +1426,18 @@ class _ProductListPageState extends State<ProductListPage> {
       rating: 4.5,
       deliveryDays: 5,
       variants: [
-        ProductVariant(weight: '1 Kg', price: 169),
-        ProductVariant(weight: '5 Kg', price: 799),
-        ProductVariant(weight: '10 Kg', price: 1549),
+        ProductVariant(
+          weight: '1 Kg',
+          price: 169,
+        ),
+        ProductVariant(
+          weight: '5 Kg',
+          price: 799,
+        ),
+        ProductVariant(
+          weight: '10 Kg',
+          price: 1549,
+        ),
       ],
     ),
   ];
@@ -957,75 +1450,162 @@ class _ProductListPageState extends State<ProductListPage> {
   void initState() {
     super.initState();
 
-    cartCount = widget.initialCartCount;
-    _filteredProducts = _getSectionProducts();
+    _filteredProducts =
+        _getSectionProducts();
 
-    if (CartCountManager.currentCount < widget.initialCartCount) {
-      CartCountManager.setCount(widget.initialCartCount);
-    }
+    // -------------------------------------------------------------------------
+    // GLOBAL CART COUNT GET
+    // -------------------------------------------------------------------------
+    //
+    // Ekhon local count return korbe.
+    //
+    // Pore CartService-er getCartCount()
+    // er vitore actual API GET call bosbe.
+    //
+    // ProductListPage direct open holeo
+    // cart count sync korte parbe.
+    // -------------------------------------------------------------------------
 
-    // TODO: এখানে "Future.delayed" এর জায়গায় তোমার actual API call বসাও।
-    // API call শেষ হলে setState(() { _isLoading = false; }) কল করো।
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) {
+    CartService.getCartCount();
+
+    // -------------------------------------------------------------------------
+    // TEMPORARY PAGE LOADING
+    // -------------------------------------------------------------------------
+    //
+    // Pore actual product API call hole
+    // ei Future.delayed remove kore API call use korbe.
+    // -------------------------------------------------------------------------
+
+    Future.delayed(
+      const Duration(
+        milliseconds: 800,
+      ),
+      () {
+        if (!mounted) return;
+
         setState(() {
           _isLoading = false;
         });
-      }
-    });
+      },
+    );
+  }
+
+  // ===========================================================================
+  // RESPONSIVE GRID COLUMN
+  // ===========================================================================
+
+  int _getCrossAxisCount(
+    double width,
+  ) {
+    // Very small phone / split screen
+    if (width < 330) {
+      return 1;
+    }
+
+    // Normal phone
+    return 2;
   }
 
   // ===========================================================================
   // SECTION PRODUCTS
   // ===========================================================================
 
-  List<ProductItem> _getSectionProducts() {
+  List<ProductItem>
+      _getSectionProducts() {
     if (widget.sectionType == null) {
-      return List<ProductItem>.from(products);
+      return List<ProductItem>.from(
+        products,
+      );
     }
 
-    if (widget.sectionType == 'trending' ||
-        widget.sectionType == 'bestSeller') {
-      return products.where((product) {
-        final name = product.name.toLowerCase();
-        return name.contains('minikit') ||
-            name.contains('basmati') ||
-            name.contains('jeera');
-      }).toList();
+    if (widget.sectionType ==
+            'trending' ||
+        widget.sectionType ==
+            'bestSeller') {
+      return products.where(
+        (product) {
+          final String name =
+              product.name.toLowerCase();
+
+          return name.contains(
+                'minikit',
+              ) ||
+              name.contains(
+                'basmati',
+              ) ||
+              name.contains(
+                'jeera',
+              );
+        },
+      ).toList();
     }
 
-    return List<ProductItem>.from(products);
+    return List<ProductItem>.from(
+      products,
+    );
   }
 
   // ===========================================================================
   // ADD TO CART
   // ===========================================================================
 
-  void _addToCart(ProductItem product, int quantity) {
-    if (quantity <= 0) return;
+  Future<void> _addToCart(
+    ProductItem product,
+    int quantity,
+  ) async {
+    if (quantity <= 0) {
+      return;
+    }
 
-    setState(() {
-      cartCount += quantity;
-    });
+    // -------------------------------------------------------------------------
+    // COMMON GLOBAL ADD TO CART FUNCTION
+    // -------------------------------------------------------------------------
+    //
+    // ProductListPage-e Qty 3 select kore ADD korle:
+    //
+    // CartService.postAddToCart(
+    //   quantity: 3,
+    // );
+    //
+    // call hobe.
+    //
+    // Tarpor:
+    //
+    // CartService.count
+    //        ↓
+    // LalBabaAppBar
+    //        ↓
+    // Notification badge +3
+    //
+    // HomePage / ProductListPage / Future page
+    // sob jaygay same function use hobe.
+    // -------------------------------------------------------------------------
 
-    CartCountManager.add(quantity);
+    await CartService.postAddToCart(
+      productId: product.id,
+      quantity: quantity,
+    );
 
-    widget.onCartCountChanged?.call(CartCountManager.currentCount);
+    if (!mounted) {
+      return;
+    }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    // Previous snackbar thakle remove kore
+    // latest message show korbe.
+    ScaffoldMessenger.of(context)
+        .hideCurrentSnackBar();
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
       SnackBar(
-        content: Text('${product.name} added to cart'),
-        duration: const Duration(milliseconds: 900),
+        content: Text(
+          '${product.name} added to cart',
+        ),
+        duration: const Duration(
+          milliseconds: 900,
+        ),
       ),
     );
-  }
-
-  // ===========================================================================
-  // BACK
-  // ===========================================================================
-
-  void _goBack() {
-    Navigator.pop(context, CartCountManager.currentCount);
   }
 
   // ===========================================================================
@@ -1033,89 +1613,157 @@ class _ProductListPageState extends State<ProductListPage> {
   // ===========================================================================
 
   @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          _goBack();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xfffafafa),
-        appBar: AppAppBar(
-          title: widget.pageTitle,
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-        ),
-        body: Column(
-          children: [
-            _buildProductHeader(),
-            Expanded(
-              child: _isLoading
-                  ? _buildShimmerGrid()
-                  : _filteredProducts.isEmpty
-                      ? _buildEmptyResult()
-                      : GridView.builder(
-                          padding: const EdgeInsets.only(
-                            left: 7,
-                            right: 7,
-                            top: 8,
-                            bottom: 15,
-                          ),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 7,
-                            mainAxisSpacing: 8,
-                            mainAxisExtent: 385,
-                          ),
-                          itemCount: _filteredProducts.length,
-                          itemBuilder: (context, index) {
-                            final product = _filteredProducts[index];
+  Widget build(
+    BuildContext context,
+  ) {
+    return Scaffold(
+      backgroundColor:
+          const Color(0xfffafafa),
 
-                            return ProductCard(
-                              key: ValueKey(product.name),
-                              product: product,
-                              onWeightTap: () {
-                                _showWeightSheet(product);
-                              },
-                              onAddToCart: (quantity) {
-                                _addToCart(product, quantity);
-                              },
-                            );
-                          },
-                        ),
-            ),
-          ],
-        ),
+      appBar: AppAppBar(
+        title: widget.pageTitle,
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+      ),
+
+      body: Column(
+        children: [
+          _buildProductHeader(),
+
+          Expanded(
+            child: _isLoading
+                ? _buildShimmerGrid()
+                : _filteredProducts
+                        .isEmpty
+                    ? _buildEmptyResult()
+                    : _buildProductGrid(),
+          ),
+        ],
       ),
     );
   }
 
   // ===========================================================================
-  // SHIMMER GRID (page loading — app_shimmer.dart অপরিবর্তিত রেখে,
-  // এখানে আসল product grid এর সমান gridDelegate ব্যবহার করে
-  // ProductShimmer বসানো হচ্ছে যাতে overflow না হয়)
+  // RESPONSIVE PRODUCT GRID
+  // ===========================================================================
+
+  Widget _buildProductGrid() {
+    return LayoutBuilder(
+      builder: (
+        context,
+        constraints,
+      ) {
+        final int crossAxisCount =
+            _getCrossAxisCount(
+          constraints.maxWidth,
+        );
+
+        return GridView.builder(
+          padding:
+              const EdgeInsets.only(
+            left: 7,
+            right: 7,
+            top: 8,
+            bottom: 15,
+          ),
+
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:
+                crossAxisCount,
+
+            crossAxisSpacing: 7,
+
+            mainAxisSpacing: 8,
+
+            // Card-er full content
+            // safely show korar jonno.
+            mainAxisExtent: 385,
+          ),
+
+          itemCount:
+              _filteredProducts.length,
+
+          itemBuilder: (
+            context,
+            index,
+          ) {
+            final ProductItem product =
+                _filteredProducts[
+                    index];
+
+            return ProductCard(
+              key: ValueKey(
+                product.name,
+              ),
+
+              product: product,
+
+              onWeightTap: () {
+                _showWeightSheet(
+                  product,
+                );
+              },
+
+              onAddToCart:
+                  (quantity) {
+                _addToCart(
+                  product,
+                  quantity,
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // ===========================================================================
+  // SHIMMER GRID
   // ===========================================================================
 
   Widget _buildShimmerGrid() {
-    return GridView.builder(
-      padding: const EdgeInsets.only(
-        left: 7,
-        right: 7,
-        top: 8,
-        bottom: 15,
-      ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 7,
-        mainAxisSpacing: 8,
-        mainAxisExtent: 385,
-      ),
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        return const ProductShimmer();
+    return LayoutBuilder(
+      builder: (
+        context,
+        constraints,
+      ) {
+        final int crossAxisCount =
+            _getCrossAxisCount(
+          constraints.maxWidth,
+        );
+
+        return GridView.builder(
+          padding:
+              const EdgeInsets.only(
+            left: 7,
+            right: 7,
+            top: 8,
+            bottom: 15,
+          ),
+
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:
+                crossAxisCount,
+
+            crossAxisSpacing: 7,
+
+            mainAxisSpacing: 8,
+
+            mainAxisExtent: 385,
+          ),
+
+          itemCount: 6,
+
+          itemBuilder: (
+            context,
+            index,
+          ) {
+            return const ProductShimmer();
+          },
+        );
       },
     );
   }
@@ -1126,30 +1774,72 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Widget _buildEmptyResult() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.search_off, size: 60, color: Colors.grey),
-          const SizedBox(height: 12),
-          const Text(
-            'No products found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Try changing your filter options.',
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _clearFilters,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE23F1C),
-              foregroundColor: Colors.white,
+      child: Padding(
+        padding:
+            const EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        child: Column(
+          mainAxisSize:
+              MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.search_off,
+              size: 60,
+              color: Colors.grey,
             ),
-            child: const Text('CLEAR FILTER'),
-          ),
-        ],
+
+            const SizedBox(
+              height: 12,
+            ),
+
+            const Text(
+              'No products found',
+              textAlign:
+                  TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight:
+                    FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(
+              height: 6,
+            ),
+
+            const Text(
+              'Try changing your filter options.',
+              textAlign:
+                  TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            ElevatedButton(
+              onPressed:
+                  _clearFilters,
+              style:
+                  ElevatedButton
+                      .styleFrom(
+                backgroundColor:
+                    const Color(
+                  0xFFE23F1C,
+                ),
+                foregroundColor:
+                    Colors.white,
+              ),
+              child: const Text(
+                'CLEAR FILTER',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1159,100 +1849,307 @@ class _ProductListPageState extends State<ProductListPage> {
   // ===========================================================================
 
   Widget _buildProductHeader() {
-    final filterCount = _selectedCategories.length + _selectedWeights.length;
+    final int filterCount =
+        _selectedCategories.length +
+            _selectedWeights.length;
 
-    final bool hasFilter = _selectedCategories.isNotEmpty ||
-        _selectedWeights.isNotEmpty ||
-        _priceRange.start != 119 ||
-        _priceRange.end != 1649;
+    final bool hasFilter =
+        _selectedCategories
+                .isNotEmpty ||
+            _selectedWeights
+                .isNotEmpty ||
+            _priceRange.start != 119 ||
+            _priceRange.end != 1649;
 
-    return Container(
-      height: 55,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Color(0xffeeeeee)),
-          bottom: BorderSide(color: Color(0xffeeeeee)),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 14),
-              child: Text(
-                _isLoading
-                    ? widget.pageTitle
-                    : (hasFilter
-                        ? 'Filtered products (${_filteredProducts.length})'
-                        : '${widget.pageTitle} (${_filteredProducts.length})'),
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+    final String title =
+        _isLoading
+            ? widget.pageTitle
+            : hasFilter
+                ? 'Filtered products (${_filteredProducts.length})'
+                : '${widget.pageTitle} (${_filteredProducts.length})';
+
+    return LayoutBuilder(
+      builder: (
+        context,
+        constraints,
+      ) {
+        final bool smallScreen =
+            constraints.maxWidth <
+                360;
+
+        // =====================================================
+        // SMALL PHONE HEADER
+        // =====================================================
+
+        if (smallScreen) {
+          return Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets
+                    .fromLTRB(
+              12,
+              8,
+              8,
+              8,
+            ),
+            decoration:
+                const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(
+                  color: Color(
+                    0xffeeeeee,
+                  ),
+                ),
+                bottom: BorderSide(
+                  color: Color(
+                    0xffeeeeee,
+                  ),
                 ),
               ),
             ),
-          ),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment
+                      .start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow:
+                      TextOverflow
+                          .ellipsis,
+                  style:
+                      const TextStyle(
+                    fontSize: 14,
+                    fontWeight:
+                        FontWeight
+                            .w600,
+                  ),
+                ),
 
-          // SORT
-          GestureDetector(
-            onTap: _isLoading ? null : _showSortSheet,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Icon(Icons.sort, size: 19),
-                  SizedBox(width: 4),
-                  Text('Sort By', style: TextStyle(fontSize: 13)),
-                ],
-              ),
-            ),
-          ),
+                const SizedBox(
+                  height: 7,
+                ),
 
-          // FILTER
-          GestureDetector(
-            onTap: _isLoading ? null : _openFilter,
-            child: Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 9,
-                vertical: 6,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.filter_list, size: 18),
-                  const SizedBox(width: 3),
-                  const Text('Filter', style: TextStyle(fontSize: 13)),
-                  if (filterCount > 0) ...[
-                    const SizedBox(width: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 2,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE23F1C),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        '$filterCount',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                Row(
+                  children: [
+                    const Spacer(),
+
+                    _buildSortButton(),
+
+                    const SizedBox(
+                      width: 6,
+                    ),
+
+                    _buildFilterButton(
+                      filterCount,
                     ),
                   ],
-                ],
+                ),
+              ],
+            ),
+          );
+        }
+
+        // =====================================================
+        // NORMAL PHONE HEADER
+        // =====================================================
+
+        return Container(
+          constraints:
+              const BoxConstraints(
+            minHeight: 55,
+          ),
+          decoration:
+              const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(
+                color:
+                    Color(0xffeeeeee),
+              ),
+              bottom: BorderSide(
+                color:
+                    Color(0xffeeeeee),
               ),
             ),
           ),
-        ],
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding:
+                      const EdgeInsets
+                          .only(
+                    left: 14,
+                    right: 5,
+                  ),
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow:
+                        TextOverflow
+                            .ellipsis,
+                    style:
+                        const TextStyle(
+                      fontSize: 14,
+                      fontWeight:
+                          FontWeight
+                              .w600,
+                    ),
+                  ),
+                ),
+              ),
+
+              _buildSortButton(),
+
+              _buildFilterButton(
+                filterCount,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // ===========================================================================
+  // SORT BUTTON
+  // ===========================================================================
+
+  Widget _buildSortButton() {
+    return InkWell(
+      onTap: _isLoading
+          ? null
+          : _showSortSheet,
+
+      borderRadius:
+          BorderRadius.circular(5),
+
+      child: const Padding(
+        padding:
+            EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 8,
+        ),
+        child: Row(
+          mainAxisSize:
+              MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.sort,
+              size: 18,
+            ),
+
+            SizedBox(width: 4),
+
+            Text(
+              'Sort By',
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ===========================================================================
+  // FILTER BUTTON
+  // ===========================================================================
+
+  Widget _buildFilterButton(
+    int filterCount,
+  ) {
+    return InkWell(
+      onTap: _isLoading
+          ? null
+          : _openFilter,
+
+      borderRadius:
+          BorderRadius.circular(5),
+
+      child: Container(
+        margin:
+            const EdgeInsets.only(
+          right: 8,
+        ),
+        padding:
+            const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 6,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color:
+                Colors.grey.shade400,
+          ),
+          borderRadius:
+              BorderRadius.circular(
+            5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize:
+              MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.filter_list,
+              size: 18,
+            ),
+
+            const SizedBox(
+              width: 3,
+            ),
+
+            const Text(
+              'Filter',
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+
+            if (filterCount > 0) ...[
+              const SizedBox(
+                width: 4,
+              ),
+
+              Container(
+                constraints:
+                    const BoxConstraints(
+                  minWidth: 18,
+                  minHeight: 18,
+                ),
+                alignment:
+                    Alignment.center,
+                padding:
+                    const EdgeInsets
+                        .symmetric(
+                  horizontal: 4,
+                ),
+                decoration:
+                    const BoxDecoration(
+                  color:
+                      AppColors.primary,
+                  shape:
+                      BoxShape.circle,
+                ),
+                child: Text(
+                  '$filterCount',
+                  style:
+                      const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight:
+                        FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -1261,67 +2158,130 @@ class _ProductListPageState extends State<ProductListPage> {
   // WEIGHT SHEET
   // ===========================================================================
 
-  void _showWeightSheet(ProductItem product) {
+  void _showWeightSheet(
+    ProductItem product,
+  ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xfffafafa),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  product.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 14),
-                ...List.generate(product.variants.length, (index) {
-                  final item = product.variants[index];
-                  final selected = product.selectedVariant == index;
 
-                  return ListTile(
-                    onTap: () {
-                      setState(() {
-                        product.selectedVariant = index;
-                      });
-                      Navigator.pop(context);
-                    },
-                    leading: Container(
-                      width: 22,
-                      height: 22,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: selected
-                              ? const Color(0xFFE23F1C)
-                              : Colors.grey,
-                          width: 2,
+      backgroundColor:
+          const Color(0xfffafafa),
+
+      isScrollControlled: true,
+
+      shape:
+          const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+
+      builder: (
+        context,
+      ) {
+        return SafeArea(
+          child:
+              SingleChildScrollView(
+            child: Padding(
+              padding:
+                  const EdgeInsets
+                      .all(18),
+              child: Column(
+                mainAxisSize:
+                    MainAxisSize.min,
+                children: [
+                  Text(
+                    product.name,
+                    textAlign:
+                        TextAlign.center,
+                    style:
+                        const TextStyle(
+                      fontSize: 17,
+                      fontWeight:
+                          FontWeight
+                              .bold,
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 14,
+                  ),
+
+                  ...List.generate(
+                    product
+                        .variants.length,
+                    (index) {
+                      final ProductVariant
+                          item =
+                          product.variants[
+                              index];
+
+                      final bool selected =
+                          product
+                                  .selectedVariant ==
+                              index;
+
+                      return ListTile(
+                        contentPadding:
+                            EdgeInsets.zero,
+
+                        onTap: () {
+                          setState(() {
+                            product.selectedVariant =
+                                index;
+                          });
+
+                          Navigator.pop(
+                            context,
+                          );
+                        },
+
+                        leading:
+                            Container(
+                          width: 22,
+                          height: 22,
+                          decoration:
+                              BoxDecoration(
+                            shape: BoxShape
+                                .circle,
+                            border:
+                                Border.all(
+                              color: selected
+                                  ? const Color(
+                                      0xFFE23F1C,
+                                    )
+                                  : Colors
+                                      .grey,
+                              width: 2,
+                            ),
+                          ),
+                          child: selected
+                              ? const Center(
+                                  child:
+                                      CircleAvatar(
+                                    radius: 6,
+                                    backgroundColor:
+                                        Color(
+                                      0xFFE23F1C,
+                                    ),
+                                  ),
+                                )
+                              : null,
                         ),
-                      ),
-                      child: selected
-                          ? const Center(
-                              child: CircleAvatar(
-                                radius: 6,
-                                backgroundColor: Color(0xFFE23F1C),
-                              ),
-                            )
-                          : null,
-                    ),
-                    title: Text(
-                      '${item.weight} - Rs ${item.price.toStringAsFixed(2)}',
-                    ),
-                  );
-                }),
-                const SizedBox(height: 10),
-              ],
+
+                        title: Text(
+                          '${item.weight} - Rs ${item.price.toStringAsFixed(2)}',
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -1334,7 +2294,7 @@ class _ProductListPageState extends State<ProductListPage> {
   // ===========================================================================
 
   void _showSortSheet() {
-    const options = [
+    const List<String> options = [
       'Default',
       'Price Low→High',
       'Price High→Low',
@@ -1343,31 +2303,60 @@ class _ProductListPageState extends State<ProductListPage> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+
+      backgroundColor:
+          Colors.white,
+
+      shape:
+          const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
       ),
-      builder: (context) {
+
+      builder: (
+        context,
+      ) {
         return SafeArea(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: options.map((option) {
-              final selected = _selectedSort == option;
+            mainAxisSize:
+                MainAxisSize.min,
+            children:
+                options.map(
+              (option) {
+                final bool selected =
+                    _selectedSort ==
+                        option;
 
-              return ListTile(
-                title: Text(option),
-                trailing: selected
-                    ? const Icon(Icons.check, color: Color(0xFFE23F1C))
-                    : null,
-                onTap: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _selectedSort = option;
-                  });
-                  _applyFilters();
-                },
-              );
-            }).toList(),
+                return ListTile(
+                  title:
+                      Text(option),
+
+                  trailing: selected
+                      ? const Icon(
+                          Icons.check,
+                          color: Color(
+                            0xFFE23F1C,
+                          ),
+                        )
+                      : null,
+
+                  onTap: () {
+                    Navigator.pop(
+                      context,
+                    );
+
+                    setState(() {
+                      _selectedSort =
+                          option;
+                    });
+
+                    _applyFilters();
+                  },
+                );
+              },
+            ).toList(),
           ),
         );
       },
@@ -1379,47 +2368,79 @@ class _ProductListPageState extends State<ProductListPage> {
   // ===========================================================================
 
   void _applyFilters() {
-    // IMPORTANT: Start from current section products, NOT from all products.
-    List<ProductItem> result = _getSectionProducts();
+    List<ProductItem> result =
+        _getSectionProducts();
 
     // CATEGORY
-    if (_selectedCategories.isNotEmpty) {
-      result = result.where((product) {
-        return _selectedCategories.any(
-          (category) => _productMatchesCategory(product, category),
-        );
-      }).toList();
+    if (_selectedCategories
+        .isNotEmpty) {
+      result = result.where(
+        (product) {
+          return _selectedCategories
+              .any(
+            (category) =>
+                _productMatchesCategory(
+              product,
+              category,
+            ),
+          );
+        },
+      ).toList();
     }
 
     // PRICE + WEIGHT
-    result = result.where((product) {
-      return product.variants.any((variant) {
-        final priceMatches = variant.price >= _priceRange.start &&
-            variant.price <= _priceRange.end;
+    result = result.where(
+      (product) {
+        return product.variants.any(
+          (variant) {
+            final bool priceMatches =
+                variant.price >=
+                        _priceRange
+                            .start &&
+                    variant.price <=
+                        _priceRange
+                            .end;
 
-        final weightMatches = _selectedWeights.isEmpty ||
-            _selectedWeights.contains(variant.weight);
+            final bool weightMatches =
+                _selectedWeights
+                        .isEmpty ||
+                    _selectedWeights
+                        .contains(
+                      variant.weight,
+                    );
 
-        return priceMatches && weightMatches;
-      });
-    }).toList();
+            return priceMatches &&
+                weightMatches;
+          },
+        );
+      },
+    ).toList();
 
     // SORT
     switch (_selectedSort) {
       case 'Price Low→High':
         result.sort(
-          (a, b) => _lowestPrice(a).compareTo(_lowestPrice(b)),
+          (a, b) =>
+              _lowestPrice(a)
+                  .compareTo(
+            _lowestPrice(b),
+          ),
         );
         break;
 
       case 'Price High→Low':
         result.sort(
-          (a, b) => _lowestPrice(b).compareTo(_lowestPrice(a)),
+          (a, b) =>
+              _lowestPrice(b)
+                  .compareTo(
+            _lowestPrice(a),
+          ),
         );
         break;
 
       case 'Newest':
-        // No createdAt field available.
+        // Pore API-te createdAt
+        // thakle ekhane sort korbe.
         break;
 
       case 'Default':
@@ -1427,7 +2448,8 @@ class _ProductListPageState extends State<ProductListPage> {
     }
 
     setState(() {
-      _filteredProducts = result;
+      _filteredProducts =
+          result;
     });
   }
 
@@ -1435,22 +2457,45 @@ class _ProductListPageState extends State<ProductListPage> {
   // CATEGORY MATCH
   // ===========================================================================
 
-  bool _productMatchesCategory(ProductItem product, String category) {
-    final name = product.name.toLowerCase();
+  bool _productMatchesCategory(
+    ProductItem product,
+    String category,
+  ) {
+    final String name =
+        product.name.toLowerCase();
 
-    switch (category.toLowerCase()) {
+    switch (
+        category.toLowerCase()) {
       case 'minikit':
-        return name.contains('minikit');
+        return name.contains(
+          'minikit',
+        );
+
       case 'banskathi':
-        return name.contains('banskathi');
+        return name.contains(
+          'banskathi',
+        );
+
       case 'ratna':
-        return name.contains('ratna');
+        return name.contains(
+          'ratna',
+        );
+
       case 'gobindo bhog':
-        return name.contains('gobindo bhog');
+        return name.contains(
+          'gobindo bhog',
+        );
+
       case 'basmati':
-        return name.contains('basmati');
+        return name.contains(
+          'basmati',
+        );
+
       case 'jeera kathi':
-        return name.contains('jeera kathi');
+        return name.contains(
+          'jeera kathi',
+        );
+
       default:
         return false;
     }
@@ -1460,14 +2505,23 @@ class _ProductListPageState extends State<ProductListPage> {
   // LOWEST PRICE
   // ===========================================================================
 
-  double _lowestPrice(ProductItem product) {
-    if (product.variants.isEmpty) {
+  double _lowestPrice(
+    ProductItem product,
+  ) {
+    if (product
+        .variants.isEmpty) {
       return double.infinity;
     }
 
     return product.variants
-        .map((variant) => variant.price)
-        .reduce((a, b) => a < b ? a : b);
+        .map(
+          (variant) =>
+              variant.price,
+        )
+        .reduce(
+          (a, b) =>
+              a < b ? a : b,
+        );
   }
 
   // ===========================================================================
@@ -1476,13 +2530,21 @@ class _ProductListPageState extends State<ProductListPage> {
 
   void _clearFilters() {
     setState(() {
-      _priceRange = const RangeValues(119, 1649);
-      _selectedCategories.clear();
-      _selectedWeights.clear();
-      _selectedSort = 'Default';
+      _priceRange =
+          const RangeValues(
+        119,
+        1649,
+      );
 
-      // IMPORTANT: Clear filter করলে current section-এই ফিরে যাবে.
-      _filteredProducts = _getSectionProducts();
+      _selectedCategories.clear();
+
+      _selectedWeights.clear();
+
+      _selectedSort =
+          'Default';
+
+      _filteredProducts =
+          _getSectionProducts();
     });
   }
 
@@ -1490,19 +2552,39 @@ class _ProductListPageState extends State<ProductListPage> {
   // FILTER DRAWER
   // ===========================================================================
 
-  Future<void> _openFilter() async {
-    final result = await showGeneralDialog<FilterResult>(
+  Future<void>
+      _openFilter() async {
+    final FilterResult? result =
+        await showGeneralDialog<
+            FilterResult>(
       context: context,
+
       barrierDismissible: true,
+
       barrierLabel: 'Filter',
-      transitionDuration: const Duration(milliseconds: 250),
-      pageBuilder: (context, animation, secondaryAnimation) {
+
+      transitionDuration:
+          const Duration(
+        milliseconds: 250,
+      ),
+
+      pageBuilder: (
+        context,
+        animation,
+        secondaryAnimation,
+      ) {
         return Align(
-          alignment: Alignment.centerRight,
+          alignment:
+              Alignment.centerRight,
           child: FilterDrawer(
-            initialPriceRange: _priceRange,
-            initialCategories: _selectedCategories,
-            initialWeights: _selectedWeights,
+            initialPriceRange:
+                _priceRange,
+
+            initialCategories:
+                _selectedCategories,
+
+            initialWeights:
+                _selectedWeights,
           ),
         );
       },
@@ -1513,29 +2595,38 @@ class _ProductListPageState extends State<ProductListPage> {
     }
 
     setState(() {
-      _priceRange = result.priceRange;
+      _priceRange =
+          result.priceRange;
 
       _selectedCategories
         ..clear()
-        ..addAll(result.categories);
+        ..addAll(
+          result.categories,
+        );
 
       _selectedWeights
         ..clear()
-        ..addAll(result.weights);
+        ..addAll(
+          result.weights,
+        );
     });
 
     _applyFilters();
   }
 }
 
-// ==============================================================================
+// =============================================================================
 // PRODUCT CARD
-// ==============================================================================
+// =============================================================================
 
-class ProductCard extends StatelessWidget {
+class ProductCard
+    extends StatelessWidget {
   final ProductItem product;
+
   final VoidCallback onWeightTap;
-  final ValueChanged<int> onAddToCart;
+
+  final ValueChanged<int>
+      onAddToCart;
 
   const ProductCard({
     super.key,
@@ -1545,60 +2636,127 @@ class ProductCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final selectedVariant = product.variants[product.selectedVariant];
+  Widget build(
+    BuildContext context,
+  ) {
+    final ProductVariant
+        selectedVariant =
+        product.variants[
+            product.selectedVariant];
 
     return Container(
+      clipBehavior:
+          Clip.antiAlias,
+
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: const Color(0xffeeeeee)),
+
+        borderRadius:
+            BorderRadius.circular(5),
+
+        border: Border.all(
+          color:
+              const Color(0xffeeeeee),
+        ),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black
+                .withValues(
+              alpha: 0.04,
+            ),
             blurRadius: 5,
-            offset: const Offset(0, 2),
+            offset:
+                const Offset(0, 2),
           ),
         ],
       ),
+
       child: Column(
         children: [
-          // IMAGE + NAME (image loading এ shimmer আছে ভেতরে)
+          // ===============================================================
+          // IMAGE + PRODUCT NAME
+          // ===============================================================
+
           ProductImageHeader(
-            imageUrl: product.imageUrl,
+            imageUrl:
+                product.imageUrl,
             name: product.name,
           ),
 
+          // ===============================================================
           // RATING
+          // ===============================================================
+
           SizedBox(
             height: 25,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                final rating = product.rating;
+              mainAxisAlignment:
+                  MainAxisAlignment
+                      .center,
+              children:
+                  List.generate(
+                5,
+                (index) {
+                  final double rating =
+                      product.rating;
 
-                if (rating >= index + 1) {
-                  return const Icon(Icons.star, size: 15, color: Colors.orange);
-                }
-                if (rating >= index + 0.5) {
-                  return const Icon(Icons.star_half, size: 15, color: Colors.orange);
-                }
-                return const Icon(Icons.star_border, size: 15, color: Colors.orange);
-              }),
+                  if (rating >=
+                      index + 1) {
+                    return const Icon(
+                      Icons.star,
+                      size: 15,
+                      color:
+                          Colors.orange,
+                    );
+                  }
+
+                  if (rating >=
+                      index + 0.5) {
+                    return const Icon(
+                      Icons.star_half,
+                      size: 15,
+                      color:
+                          Colors.orange,
+                    );
+                  }
+
+                  return const Icon(
+                    Icons.star_border,
+                    size: 15,
+                    color:
+                        Colors.orange,
+                  );
+                },
+              ),
             ),
           ),
 
+          // ===============================================================
           // WEIGHT + PRICE + DELIVERY
+          // ===============================================================
+
           ProductPriceInfo(
-            weight: selectedVariant.weight,
-            price: selectedVariant.price,
-            deliveryDays: product.deliveryDays,
-            onWeightTap: onWeightTap,
+            weight:
+                selectedVariant.weight,
+
+            price:
+                selectedVariant.price,
+
+            deliveryDays:
+                product.deliveryDays,
+
+            onWeightTap:
+                onWeightTap,
           ),
 
-          // QUANTITY + ADD
+          // ===============================================================
+          // QTY + ADD
+          // ===============================================================
+
           QtyAddButton(
-            onAddToCart: onAddToCart,
+            onAddToCart:
+                onAddToCart,
           ),
         ],
       ),
@@ -1606,19 +2764,40 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-// ==============================================================================
+// =============================================================================
 // PRODUCT MODEL
-// ==============================================================================
+// =============================================================================
 
 class ProductItem {
+  /// Future API-ready product ID.
+  ///
+  /// Ekhon static design data-te ID nei,
+  /// tai nullable rakha hoyeche.
+  ///
+  /// API ashle:
+  ///
+  /// ProductItem(
+  ///   id: '123',
+  ///   ...
+  /// )
+  ///
+  final String? id;
+
   final String name;
+
   final String imageUrl;
+
   final double rating;
+
   final int deliveryDays;
-  final List<ProductVariant> variants;
+
+  final List<ProductVariant>
+      variants;
+
   int selectedVariant;
 
   ProductItem({
+    this.id,
     required this.name,
     required this.imageUrl,
     required this.rating,
@@ -1628,12 +2807,13 @@ class ProductItem {
   });
 }
 
-// ==============================================================================
+// =============================================================================
 // PRODUCT VARIANT
-// ==============================================================================
+// =============================================================================
 
 class ProductVariant {
   final String weight;
+
   final double price;
 
   ProductVariant({
