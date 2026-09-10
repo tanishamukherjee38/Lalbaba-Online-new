@@ -1,5 +1,3 @@
-
-
 // import 'package:flutter/material.dart';
 // import '../../../../app/config/app_config.dart';
 // import '../../../../app/theme/app_colors.dart';
@@ -493,6 +491,8 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lalbaba_online/app/router/route_names.dart';
 import '../../../../app/config/app_config.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_app_bar.dart';
@@ -603,7 +603,9 @@ class _AccountPageState extends State<AccountPage> {
                     _MenuTile(
                       icon: Icons.location_on_outlined,
                       label: AppStrings.myAddress,
-                      onTap: () {},
+                      onTap: () {
+                        context.push(RouteNames.address);
+                      },
                       showDivider: false,
                     ),
                   ],
@@ -661,7 +663,10 @@ class _AccountPageState extends State<AccountPage> {
                 ),
 
                 const SizedBox(height: 28),
-                _LogoutButton(label: AppStrings.logOut, onTap: _handleLogoutTap),
+                _LogoutButton(
+                  label: AppStrings.logOut,
+                  onTap: _handleLogoutTap,
+                ),
                 const SizedBox(height: 18),
                 Text(
                   "${AppStrings.appVersion} ${AppConfig.version}",
@@ -963,10 +968,7 @@ class _MenuTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     label,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 15, color: Colors.black87),
                   ),
                 ),
                 Icon(

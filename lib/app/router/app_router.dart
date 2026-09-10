@@ -1,6 +1,7 @@
 // Application navigation configuration.
 // Why: Define and manage all application routes in one centralized place.
 import 'package:go_router/go_router.dart';
+import 'package:lalbaba_online/features/address/presentation/page/address_list_page.dart';
 
 import '../../features/address/presentation/page/address.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -88,6 +89,9 @@ final appRouter = GoRouter(
     ),
     //Address
     // =====================
-    GoRoute(path: RouteNames.address, builder: (_, __) => const AddressPage()),
+    GoRoute(
+      path: RouteNames.address,
+      builder: (_, __) => const AddressListPage(),
+    ),
   ],
 );
