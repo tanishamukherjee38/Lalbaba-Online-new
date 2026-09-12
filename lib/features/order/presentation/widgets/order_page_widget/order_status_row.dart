@@ -1,14 +1,13 @@
-// "Delivered" / "Processing" heading + date + On Time pill.
-// Mirrors the Nykaa order card's status block.
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_sizes.dart';
-import '../../../../core/utils/date_utils.dart';
+import '../../../../../app/theme/app_colors.dart';
+import '../../../../../app/theme/app_sizes.dart';
+import '../../../../../core/utils/date_utils.dart';
 
-import '../../model/order_model.dart';
+import '../../../model/order_model.dart';
 
 
 class OrderStatusRow extends StatelessWidget {

@@ -1,12 +1,11 @@
-// Loading placeholders for the My Orders page, built on the shared
-// AppShimmer block (same one ProductShimmerList uses).
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_sizes.dart';
-import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../../app/theme/app_colors.dart';
+import '../../../../../app/theme/app_sizes.dart';
+import '../../../../../core/widgets/app_shimmer.dart';
 
 
 class OrderCardShimmer extends StatelessWidget {

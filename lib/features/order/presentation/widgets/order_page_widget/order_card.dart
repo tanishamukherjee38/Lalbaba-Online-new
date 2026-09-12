@@ -1,13 +1,10 @@
-// One order = one card. Cancel/View buttons sit at the top, followed by
-// every ordered item, each rendered by its own OrderItemTile.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_sizes.dart';
+import '../../../../../app/theme/app_colors.dart';
+import '../../../../../app/theme/app_sizes.dart';
 
-import '../../model/order_model.dart';
+import '../../../model/order_model.dart';
 
 import 'order_action_button.dart';
 

@@ -1,12 +1,11 @@
-// Single product row inside an order card: network image, name, weight,
-// optional GIFT badge (mirrors the Nykaa "My Orders" item row).
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../app/theme/app_colors.dart';
-import '../../../../app/theme/app_sizes.dart';
-import '../../model/order_model.dart';
+import '../../../../../app/theme/app_colors.dart';
+import '../../../../../app/theme/app_sizes.dart';
+import '../../../model/order_model.dart';
 
 
 class OrderItemTile extends StatelessWidget {
@@ -54,31 +53,7 @@ class OrderItemTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (item.isGift)
-                  Positioned(
-                    top: -6,
-                    left: -6,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius:
-                            BorderRadius.circular(AppSizes.radiusSmall),
-                      ),
-                      child: Text(
-                        'GIFT',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+                ],
             ),
             SizedBox(width: AppSizes.spacingMedium),
             Expanded(
