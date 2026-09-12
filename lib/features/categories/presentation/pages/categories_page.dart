@@ -1,165 +1,172 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../../app/router/route_names.dart';
 import '../../../../core/widgets/app_app_bar.dart';
 import '../../../account/presentation/widgets/app_string.dart';
+import '../../../home/presentation/widgets/category_widget.dart';
+
+import '../../../product/presentation/pages/product_list_page.dart';
+import '../widgets/sub_categories_widgets.dart';
 
 class CategoriesPage extends ConsumerStatefulWidget {
   const CategoriesPage({super.key});
 
   @override
-  ConsumerState<CategoriesPage> createState() => _CategoriesPageState();
+  ConsumerState<CategoriesPage> createState() =>
+      _CategoriesPageState();
 }
 
-class _CategoriesPageState extends ConsumerState<CategoriesPage> {
+class _CategoriesPageState
+    extends ConsumerState<CategoriesPage> {
+  int _selectedCategoryIndex = 0;
+
+  final List<String> _categories = const [
+    'Rice',
+    'Spices',
+  ];
+
+  final Map<String, List<String>> _subCategories = const {
+    'Rice': [
+      'Jeera Kathi',
+      'Basmati',
+      'Gobindo Bhog',
+      'Ratna',
+      'Banskathi',
+      'Minikit',
+    ],
+  };
+
+  String get _selectedCategory {
+    return _categories[_selectedCategoryIndex];
+  }
+
+  List<String> get _selectedSubCategories {
+    return _subCategories[_selectedCategory] ?? [];
+  }
+
+  // ============================================================
+  // OPEN PRODUCT LIST WITH SELECTED SUB CATEGORY
+  // ============================================================
+
+  void _openProductList(String subCategory) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListPage(
+          pageTitle: subCategory,
+          initialCategory: subCategory,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: AppStrings.categories, centerTitle: true),
+      backgroundColor: const Color(0xFFFDFDFD),
+
+      appBar: AppAppBar(
+        title: AppStrings.categories,
+        centerTitle: true,
+      ),
+
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Shop by Category',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+              const SizedBox(height: 18),
+
+              // =========================
+              // MAIN HEADING
+              // =========================
+
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Text(
+                  'Shop by Category',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF212121),
+                      ),
+                ),
               ),
 
               const SizedBox(height: 6),
 
-              Text(
-                'Explore our wide range of products',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Text(
+                  'Explore our wide range of products',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
+                ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
 
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _categories.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  childAspectRatio: 1.05,
-                ),
-                itemBuilder: (context, index) {
-                  final category = _categories[index];
+              // =========================
+              // MAIN CATEGORY
+              // =========================
 
-                  return _CategoryCard(
-                    title: category.title,
-                    icon: category.icon,
-                    onTap: () {
-                      context.push(RouteNames.cart);
-                      // TODO: Navigate to the selected category.
-                    },
+              CategoryWidget(
+                names: _categories,
+                selectedIndex: _selectedCategoryIndex,
+                onCategoryTap: (categoryName) {
+                  final int index =
+                      _categories.indexOf(categoryName);
+
+                  if (index != -1) {
+                    setState(() {
+                      _selectedCategoryIndex = index;
+                    });
+                  }
+
+                  debugPrint(
+                    'Selected Category: $categoryName',
                   );
                 },
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-class _CategoryCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final VoidCallback onTap;
+              const SizedBox(height: 24),
 
-  const _CategoryCard({
-    required this.title,
-    required this.icon,
-    required this.onTap,
-  });
+              // =========================
+              // SUB CATEGORY
+              // =========================
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Colors.grey.shade200),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+              SubCategoryWidget(
+                selectedCategory: _selectedCategory,
+                items: _selectedSubCategories,
+                onItemTap: (itemName) {
+                  debugPrint(
+                    'Selected Product Type: $itemName',
+                  );
+
+                  // Open product list and send
+                  // selected sub-category.
+                  _openProductList(itemName);
+                },
               ),
+
+              const SizedBox(height: 30),
             ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 58,
-                  width: 58,
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.10),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 30,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
     );
   }
 }
-
-class _CategoryItem {
-  final String title;
-  final IconData icon;
-
-  const _CategoryItem({required this.title, required this.icon});
-}
-
-const List<_CategoryItem> _categories = [
-  _CategoryItem(title: 'Rice', icon: Icons.rice_bowl_outlined),
-  _CategoryItem(title: 'Pulses', icon: Icons.grain),
-  _CategoryItem(title: 'Flour', icon: Icons.bakery_dining_outlined),
-  _CategoryItem(title: 'Spices', icon: Icons.local_fire_department_outlined),
-  _CategoryItem(title: 'Oil', icon: Icons.water_drop_outlined),
-  _CategoryItem(title: 'Dry Fruits', icon: Icons.eco_outlined),
-  _CategoryItem(title: 'Grocery', icon: Icons.shopping_basket_outlined),
-  _CategoryItem(title: 'Others', icon: Icons.category_outlined),
-];

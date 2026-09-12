@@ -1,12 +1,10 @@
 
 
 import 'package:flutter/material.dart';
-
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/services/cart_service.dart';
 import '../../../../core/widgets/app_app_bar.dart';
 import '../../../../core/widgets/app_shimmer.dart';
-
 import '../widgets/fliter_drawer_widget.dart';
 import '../widgets/product_name_image.dart';
 import '../widgets/product_price_deliver_weight.dart';
@@ -17,14 +15,19 @@ class ProductListPage
   // null       = all products
   // trending   = trending products
   // bestSeller = best seller products
-
   final String? sectionType;
+
+  // Category page theke kon sub-category select hoyeche.
+  // Example: Jeera Kathi, Basmati, Ratna etc.
+  // null hole kono initial category filter apply hobe na.
+  final String? initialCategory;
 
   final String pageTitle;
 
   const ProductListPage({
     super.key,
     this.sectionType,
+    this.initialCategory,
     this.pageTitle = 'Products',
   });
 
@@ -295,18 +298,18 @@ class _ProductListPageState
 
   List<ProductItem>
       _getSectionProducts() {
-    if (widget.sectionType ==
-        null) {
-      return List<ProductItem>.from(
+    // First sectionType onujayi base product list ready kori.
+    List<ProductItem> result;
+
+    if (widget.sectionType == null) {
+      result = List<ProductItem>.from(
         products,
       );
-    }
-
-    if (widget.sectionType ==
+    } else if (widget.sectionType ==
             'trending' ||
         widget.sectionType ==
             'bestSeller') {
-      return products.where(
+      result = products.where(
         (product) {
           final String name =
               product.name
@@ -323,11 +326,30 @@ class _ProductListPageState
               );
         },
       ).toList();
+    } else {
+      result = List<ProductItem>.from(
+        products,
+      );
     }
 
-    return List<ProductItem>.from(
-      products,
-    );
+    // Category page theke sub-category pathano hole
+    // shudhu oi category-r matching products dekhabo.
+    final String? initialCategory =
+        widget.initialCategory;
+
+    if (initialCategory != null &&
+        initialCategory.trim().isNotEmpty) {
+      result = result.where(
+        (product) {
+          return _productMatchesCategory(
+            product,
+            initialCategory,
+          );
+        },
+      ).toList();
+    }
+
+    return result;
   }
 
   // ===========================================================================
